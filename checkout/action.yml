@@ -1,0 +1,47 @@
+name: "DiligentGraphics: Checkout"
+description: "Checkout submodules required for the build"
+
+inputs:
+  module:
+    description: The name of the module to check out.
+    required: false
+    default: ${{ github.repository }}
+
+runs:
+  using: "composite" # must be set to "composite"
+  steps:
+    - name: Clone DiligentSamples
+      id: checkout_samples
+      if: ${{ endsWith(inputs.module, 'Samples') }}
+      uses: actions/checkout@v2
+      with:
+        repository: DiligentGraphics/DiligentSamples
+        path:       DiligentSamples
+        submodules: recursive
+
+    - name: Clone DiligentFX
+      id: checkout_fx
+      if: ${{ steps.checkout_samples.conclusion == 'success' || endsWith(inputs.module, 'FX') }}
+      uses: actions/checkout@v2
+      with:
+        repository: DiligentGraphics/DiligentFX
+        path:       DiligentFX
+        submodules: recursive
+
+    - name: Clone DiligentTools
+      id: checkout_tools
+      if: ${{ steps.checkout_fx.conclusion == 'success' || endsWith(inputs.module, 'Tools') }}
+      uses: actions/checkout@v2
+      with:
+        repository: DiligentGraphics/DiligentTools
+        path:       DiligentTools
+        submodules: recursive
+
+    - name: Clone DiligentCore
+      id: checkout_core
+      if: ${{ steps.checkout_tools.conclusion == 'success' ||  endsWith(inputs.module, 'Core') }}
+      uses: actions/checkout@v2
+      with:
+        repository: DiligentGraphics/DiligentCore
+        path:       DiligentCore
+        submodules: recursive
