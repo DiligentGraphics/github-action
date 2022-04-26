@@ -57,6 +57,7 @@ runs:
         "${{github.action_path}}/create_cmake.sh"
 
     - name: Configure CMake
+      if: ${{ success() }}
       env:
         INPUT_VS_ARCH:               "${{ inputs.vs-arch }}"
         INPUT_BUILD_TYPE:            "${{ inputs.build-type }}"
@@ -73,3 +74,13 @@ runs:
         chmod +x "${{github.action_path}}/configure_cmake.sh"
         "${{github.action_path}}/configure_cmake.sh"
 
+    - name: Validate configuration
+      if: ${{ success() }}
+      env:
+        INPUT_GENERATOR: "${{ inputs.generator }}"
+        INPUT_VS_ARCH:   "${{ inputs.vs-arch }}"
+
+      shell: bash
+      run: |
+        chmod +x "${{github.action_path}}/validate_config.sh"
+        "${{github.action_path}}/validate_config.sh"
