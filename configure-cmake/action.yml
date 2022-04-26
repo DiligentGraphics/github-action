@@ -1,0 +1,95 @@
+name: "DiligentGraphics: Configure CMake"
+description: "Configures CMake for the build"
+
+inputs:
+  generator:
+    description: CMake generator (e.g. 'Visual Studio 17 2022' or 'Ninja')
+    required: false
+
+  vs-arch:
+    description: Architecture for Visual Studio Generator (x64 or Win32)
+    required: false
+
+  build-type:
+    description: Build type (Debug, Release, etc.)
+    required: true
+  
+  osx-deployment-target:
+    description: Deployment target to pass to CMAKE_OSX_DEPLOYMENT_TARGET
+    required: false
+    default: '11'
+
+  osx-architectures:
+    description: Architectures to pass to CMAKE_OSX_ARCHITECTURES
+    required: false
+    default: 'arm64'
+
+  cmake-args:
+    description: Additional CMake arguments
+    required: false
+
+  cc:
+    description: c compiler
+    required: false
+
+  cxx:
+    description: c++ compiler
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Generate CMake File
+      if: ${{ endsWith(github.repository, 'Tools') || endsWith(github.repository, 'FX') || endsWith(github.repository, 'Samples') }}
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: |
+        echo "cmake_minimum_required(VERSION 3.6)" > CMakeLists.txt
+        echo "Project(BuildTest)" >> CMakeLists.txt
+        echo "add_subdirectory(DiligentCore)" >> CMakeLists.txt
+        [ -d DiligentTools   ] && echo "add_subdirectory(DiligentTools)" >> CMakeLists.txt
+        [ -d DiligentFX      ] && echo "add_subdirectory(DiligentFX)" >> CMakeLists.txt
+        [ -d DiligentSamples ] && echo "add_subdirectory(DiligentSamples)" >> CMakeLists.txt
+
+    - name: Configure CMake
+      working-directory: ${{ runner.workspace }}
+      env:
+        CMAKE_GENERATOR: ${{ inputs.generator }}
+        CC:              ${{ inputs.cc }}
+        CXX:             ${{ inputs.cxx }}
+
+      shell: bash
+      run: |
+        CMAKE_CMD="cmake -S . -B ./build"
+
+        if [[ "$CMAKE_GENERATOR" != "" ]]; then
+          CMAKE_CMD="$CMAKE_CMD -G \"$CMAKE_GENERATOR\""
+        elif [[ "$DILIGENT_TARGET_PLATFORM" == "emscripten" ]]; then
+          CMAKE_CMD="$CMAKE_CMD -G Ninja"
+        fi
+
+        if [[ "$CMAKE_GENERATOR" == "Visual Studio"* ]]; then
+          CMAKE_CMD="$CMAKE_CMD -A ${{inputs.vs-arch}}"
+        fi
+
+        CMAKE_CMD="$CMAKE_CMD -DCMAKE_BUILD_TYPE=${{inputs.build-type}} -DDILIGENT_NO_FORMAT_VALIDATION=ON -DCMAKE_INSTALL_PREFIX=install"
+
+        if [[ "$VULKAN_SDK" != "" ]]; then
+          CMAKE_CMD="$CMAKE_CMD -DVULKAN_SDK=\"$VULKAN_SDK\""
+        fi
+
+        if [[ "$DILIGENT_TARGET_PLATFORM" == "iOS" || "$DILIGENT_TARGET_PLATFORM" == "tvOS" ]]; then
+          CMAKE_CMD="$CMAKE_CMD -DCMAKE_SYSTEM_NAME=$DILIGENT_TARGET_PLATFORM -DCMAKE_OSX_DEPLOYMENT_TARGET=${{inputs.osx-deployment-target}} -DCMAKE_OSX_ARCHITECTURES=${{inputs.osx-architectures}}"
+        fi
+
+        if [[ "$DILIGENT_TARGET_PLATFORM" == "emscripten" ]]; then
+          CMAKE_CMD="emcmake $CMAKE_CMD"
+        fi
+
+        if [[ "${{ inputs.cmake-args }}" != "" ]]; then
+          CMAKE_CMD="$CMAKE_CMD ${{ inputs.cmake-args }}"
+        fi
+
+        echo "$CMAKE_CMD"
+        $CMAKE_CMD

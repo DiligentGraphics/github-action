@@ -34,6 +34,11 @@ inputs:
 runs:
   using: "composite" # must be set to "composite"
   steps:
+    - name: Set Environment Variables
+      shell: bash
+      run: |
+        echo "DILIGENT_TARGET_PLATFORM=${{inputs.platform}}" >> $GITHUB_ENV
+
     - name: Download Linux dependencies
       if: ${{ inputs.platform == 'Linux' }}
       shell: bash
