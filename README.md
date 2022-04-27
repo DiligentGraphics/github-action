@@ -66,19 +66,13 @@ Linux libraires:
 
 Configures CMake; creates a helper `CMakeLists.txt` file, if necessary.
 
-Build files are generated in `${{runner.workspace}}/build` directory.
-The path is stored in `DILIGENT_BUILD_DIR` environment varible.
-
-Install directory is set to `${{runner.workspace}}/build/install`.
-The path is stored in `DILIGENT_INSTALL_DIR` environment varible.
-
 Example:
 
 ```yml
 steps:
 - name: Configure CMake
   if: success()
-  uses: DiligentGraphics/github-action/configure-cmake@dev
+  uses: DiligentGraphics/github-action/configure-cmake@v1
   with:
     generator:             Visual Studio 17 2022
     vs-arch:               x64   # Required for VS generator
@@ -95,3 +89,24 @@ Default versions are specified in the table below:
 |  Parameter            |      v1       |
 |-----------------------|---------------|
 | osx-deployment-target |      11       |
+
+The action sets the following environment variables:
+* `DILIGENT_BUILD_TYPE`  - Build type (`${{inputs.build-type}}`)
+* `DILIGENT_BUILD_DIR`   - Build directory (`${{runner.workspace}}/build`)
+* `DILIGENT_INSTALL_DIR` - Install directory (`${{runner.workspace}}/build/install`)
+
+
+## build
+
+Runs the build for the current configuration.
+
+Example:
+
+```yml
+steps:
+- name: Build
+  if: success()
+  uses: DiligentGraphics/github-action/build@master
+  with:
+    target: install # Optional target
+```

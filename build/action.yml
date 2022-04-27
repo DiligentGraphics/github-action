@@ -1,0 +1,28 @@
+name: "DiligentGraphics: Build"
+description: "Builds the current configuration"
+
+inputs:
+  target:
+    description: Target to build (optional)
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run CMake build
+      working-directory: ${{env.DILIGENT_BUILD_DIR}}
+      shell: bash
+      run: |
+        # Prepare CMake command line
+        # DILIGENT_BUILD_TYPE is set by configure-cmake (configure_cmake.sh)
+        CMAKE_CMD="cmake --build . --config $DILIGENT_BUILD_TYPE"
+        if [[ "${{inputs.target}}" != "" ]]; then
+          CMAKE_CMD="$CMAKE_CMD --target ${{inputs.target}}"
+        fi
+        CMAKE_CMD="$CMAKE_CMD -j2"
+        echo $CMAKE_CMD
+
+        # Can't just use "$CMAKE_CMD" as it will split the string at spaces ignoring quotes
+        # https://unix.stackexchange.com/questions/444946/how-can-we-run-a-command-stored-in-a-variable
+        bash -c "$CMAKE_CMD"

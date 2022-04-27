@@ -4,6 +4,7 @@ if [[ "$DILIGENT_TARGET_PLATFORM" == "" ]]; then
    exit 1
 fi
 
+echo "DILIGENT_BUILD_TYPE=$INPUT_BUILD_TYPE" >> $GITHUB_ENV
 echo "DILIGENT_BUILD_DIR=$BUILD_DIRECTORY" >> $GITHUB_ENV
 
 # Start building the CMake command line
