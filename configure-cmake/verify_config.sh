@@ -6,6 +6,26 @@ if [[ "$DILIGENT_TARGET_PLATFORM" == "" ]]; then
     exit 1
 fi
 
+
+RES="OK"
+
+# Verify generator
+if [[ "$DILIGENT_TARGET_PLATFORM" == "Emscripten" && "$INPUT_GENERATOR" == "" ]]; then
+    # Emscripten always uses Ninja
+    INPUT_GENERATOR="Ninja"
+fi
+
+GENERATOR_STR="CMake generator: $INPUT_GENERATOR"
+# Regular expressions only work inside [[ ]]
+if [[ "$CMAKE_LOG" == *"$GENERATOR_STR"* ]]; then
+    echo "Verifying '$GENERATOR_STR': OK"
+else
+    echo "Verifying '$GENERATOR_STR': FAIL"
+    RES="FAIL"
+fi
+
+
+# Verify platform name
 PLATFORM_NAME="$DILIGENT_TARGET_PLATFORM"
 if [[ "$DILIGENT_TARGET_PLATFORM" == "UWP" ]]; then
     PLATFORM_NAME="Universal Windows"
@@ -19,29 +39,15 @@ if [[ "$DILIGENT_TARGET_PLATFORM" == "Win32" || "$DILIGENT_TARGET_PLATFORM" == "
     fi
 fi
 
-RES="OK"
-
-PALTFORM_STR="Target platform: $PLATFORM_NAME"
-# Regular expressions only works inside [[ ]]
-if [[ "$CMAKE_LOG" == *"$PALTFORM_STR"* ]]; then
-    echo "Verifying '$PALTFORM_STR': OK"
+PLATFORM_STR="Target platform: $PLATFORM_NAME"
+# Regular expressions only work inside [[ ]]
+if [[ "$CMAKE_LOG" == *"$PLATFORM_STR"* ]]; then
+    echo "Verifying '$PLATFORM_STR': OK"
 else
-    echo "Verifying '$PALTFORM_STR': FAIL"
+    echo "Verifying '$PLATFORM_STR': FAIL"
     RES="FAIL"
 fi
 
-if [[ "$DILIGENT_TARGET_PLATFORM" == "Emscripten" && "$INPUT_GENERATOR" == "" ]]; then
-    INPUT_GENERATOR="Ninja"
-fi
-
-GENERATOR_STR="CMake generator: $INPUT_GENERATOR"
-if [[ "$CMAKE_LOG" == *"$GENERATOR_STR"* ]]; then
-    echo "Verifying '$GENERATOR_STR': OK"
-else
-    echo "Verifying '$GENERATOR_STR': FAIL"
-    RET_CODE=1
-    RES="FAIL"
-fi
 
 if [[ "$RES" != "OK" ]]; then
     echo "Captured CMake log:"

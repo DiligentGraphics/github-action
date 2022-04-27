@@ -60,3 +60,32 @@ Linux libraires:
   - libxinerama-dev
   - libxcursor-dev
   - libxi-dev
+
+
+## configure-cmake
+
+Configures CMake; creates a helper `CMakeLists.txt` file, if necessary.
+
+Example:
+
+```yml
+steps:
+- name: Configure CMake
+  if: success()
+  uses: DiligentGraphics/github-action/configure-cmake@dev
+  with:
+    generator:             Visual Studio 17 2022
+    vs-arch:               x64   # Required for VS generator
+    build-type:            Debug # Required
+    cmake-args:            -DDILIGENT_DEVELOPMENT=ON # Optional extra CMake arguments
+    osx-deployment-target: 11         # Required for iOS/tvOS
+    osx-architectures:     arm64      # Required for iOS/tvOS
+    cc:                    clang-12   # Optional for Linux
+    cxx:                   clang++-12 # Optional for Linux
+```
+
+Default versions are specified in the table below:
+
+|  Parameter            |      v1       |
+|-----------------------|---------------|
+| osx-deployment-target |      11       |
