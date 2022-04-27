@@ -67,8 +67,10 @@ Linux libraires:
 Configures CMake; creates a helper `CMakeLists.txt` file, if necessary.
 
 Build files are generated in `${{runner.workspace}}/build` directory.
+The path is stored in `DILIGENT_BUILD_DIR` environment varible.
 
 Install directory is set to `${{runner.workspace}}/build/install`.
+The path is stored in `DILIGENT_INSTALL_DIR` environment varible.
 
 Example:
 

@@ -4,6 +4,8 @@ if [[ "$DILIGENT_TARGET_PLATFORM" == "" ]]; then
    exit 1
 fi
 
+echo "DILIGENT_BUILD_DIR=$BUILD_DIRECTORY" >> $GITHUB_ENV
+
 # Start building the CMake command line
 CMAKE_CMD="cmake -S . -B \"$BUILD_DIRECTORY\""
 
@@ -56,6 +58,8 @@ fi
 # Add install prefix - use full path to the build folder, otherwise
 # it will be created in the current directory (which is the source folder)
 CMAKE_CMD="$CMAKE_CMD -DCMAKE_INSTALL_PREFIX=\"$BUILD_DIRECTORY/install\""
+
+echo "DILIGENT_INSTALL_DIR=$BUILD_DIRECTORY/install" >> $GITHUB_ENV
 
 echo "$CMAKE_CMD"
 
