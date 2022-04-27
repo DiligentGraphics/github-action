@@ -66,6 +66,10 @@ Linux libraires:
 
 Configures CMake; creates a helper `CMakeLists.txt` file, if necessary.
 
+Build files are generated in `${{runner.workspace}}/build` directory.
+
+Install directory is set to `${{runner.workspace}}/build/install`.
+
 Example:
 
 ```yml
