@@ -1,10 +1,10 @@
-if [[ "$IS_SUBMODULE" == "true" ]]; then
+if [[ "$INPUT_IS_SUBMODULE" == "true" ]]; then
     cd DiligentCore
 fi
 cd Tests/DiligentCoreTest/assets
 
 BIN_PATH="$DILIGENT_BUILD_DIR"
-if [[ "$IS_SUBMODULE" == "true" ]]; then
+if [[ "$INPUT_IS_SUBMODULE" == "true" ]]; then
     BIN_PATH="$BIN_PATH/DiligentCore"
 fi
 BIN_PATH="$BIN_PATH/Tests/DiligentCoreTest"
@@ -16,12 +16,12 @@ fi
 
 BIN_PATH="$BIN_PATH/DiligentCoreTest"
 
-if [[ "$RUNNER_OS" == "Windows" ]]; then
+if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
     BIN_PATH="$BIN_PATH.exe"
 fi
 
-if [[ "$ARGS" != "" ]]; then
-    BIN_PATH="$BIN_PATH $ARGS"
+if [[ "$INPUT_ARGS" != "" ]]; then
+    BIN_PATH="$BIN_PATH $INPUT_ARGS"
 fi
 
 echo "$BIN_PATH"

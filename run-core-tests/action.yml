@@ -13,9 +13,9 @@ runs:
     - name: Run Diligent Core Tests
       working-directory: ${{github.workspace}}
       env:
-        RUNNER_OS:    ${{runner.os}}
-        ARGS:         ${{inputs.args}}
-        IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
+        INPUT_RUNNER_OS:    ${{runner.os}}
+        INPUT_ARGS:         ${{inputs.args}}
+        INPUT_IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
       shell: bash
       run: |
         # Run Diligent Core Tests
