@@ -140,3 +140,17 @@ Example:
     mode:    d3d12_sw
     use_dxc: true
 ```
+
+
+## run-tools-tests
+
+Runs Diligent Tools tests for the current configuration.
+
+Example:
+
+```yml
+steps:
+- name: DiligentToolsTest
+  if:   success()
+  uses: DiligentGraphics/github-action/run-tools-tests@master
+```

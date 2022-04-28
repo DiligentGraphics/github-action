@@ -1,0 +1,22 @@
+name: "DiligentGraphics: Run Tools Tests"
+description: "Run tests from the DiligentToolsTest suite"
+
+inputs:
+  args:
+    description: Optional arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run Diligent Tools Tests
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS: ${{runner.os}}
+        INPUT_ARGS:      ${{inputs.args}}
+      shell: bash
+      run: |
+        # Run Diligent Tools Tests
+        chmod +x "${{github.action_path}}/run_tools_tests.sh"
+        "${{github.action_path}}/run_tools_tests.sh"
