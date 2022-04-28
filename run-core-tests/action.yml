@@ -1,0 +1,23 @@
+name: "DiligentGraphics: Run Core Tests"
+description: "Run tests from the DiligentCoreTest suite"
+
+inputs:
+  args:
+    description: Optional arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run Diligent Core Tests
+      working-directory: ${{github.workspace}}
+      env:
+        RUNNER_OS:    ${{runner.os}}
+        ARGS:         ${{inputs.args}}
+        IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
+      shell: bash
+      run: |
+        # Run Diligent Core Tests
+        chmod +x "${{github.action_path}}/run_core_tests.sh"
+        "${{github.action_path}}/run_core_tests.sh"

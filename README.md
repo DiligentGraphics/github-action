@@ -110,3 +110,16 @@ steps:
   with:
     target: install # Optional target
 ```
+
+## run-core-tests
+
+Runs Diligent Core tests for the current configuration.
+
+Example:
+
+```yml
+steps:
+- name: DiligentCoreTest
+  if:   success()
+  uses: DiligentGraphics/github-action/run-core-tests@master
+```
