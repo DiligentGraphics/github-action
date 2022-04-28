@@ -25,3 +25,16 @@ runs:
         # Run Diligent Tools GPU Tests
         chmod +x "${{github.action_path}}/run_tools_gpu_tests.sh"
         "${{github.action_path}}/run_tools_gpu_tests.sh"
+
+    - name: Verify Test Output
+      env:
+        INPUT_MODE: ${{inputs.mode}}
+      shell: bash
+      run: |
+        # Verify Test Output
+        chmod +x "${{github.action_path}}/verify_test_output.sh"
+        EXIT_CODE=0
+        "${{github.action_path}}/verify_test_output.sh" || EXIT_CODE=$?
+        if [[ "$EXIT_CODE" != "0" ]]; then
+          echo "::error:: Tools GPU tests output verification failed! Please examine it to find mismatches."
+        fi
