@@ -9,7 +9,7 @@ if [[ "$IS_SUBMODULE" == "true" ]]; then
 fi
 BIN_PATH="$BIN_PATH/Tests/DiligentCoreTest"
 
-if [ -d "./$DILIGENT_BUILD_TYPE" ]; then
+if [ -d "$BIN_PATH/$DILIGENT_BUILD_TYPE" ]; then
     # Multiple-configuration build such as Visual Studio
     BIN_PATH="$BIN_PATH/$DILIGENT_BUILD_TYPE"
 fi

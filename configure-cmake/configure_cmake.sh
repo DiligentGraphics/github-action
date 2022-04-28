@@ -5,6 +5,9 @@ if [[ "$DILIGENT_TARGET_PLATFORM" == "" ]]; then
 fi
 
 echo "DILIGENT_BUILD_TYPE=$INPUT_BUILD_TYPE" >> $GITHUB_ENV
+
+# Fix back slashes
+BUILD_DIRECTORY=$(tr '\\' '/' <<<"$BUILD_DIRECTORY")
 echo "DILIGENT_BUILD_DIR=$BUILD_DIRECTORY" >> $GITHUB_ENV
 
 # Start building the CMake command line
