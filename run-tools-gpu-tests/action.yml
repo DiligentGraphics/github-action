@@ -1,0 +1,27 @@
+name: "DiligentGraphics: Run Tools GPU Tests"
+description: "Run tests from the DiligentToolsAPITest suite"
+
+inputs:
+  mode:
+    description: Graphics mode (d3d11_sw, d3d12_sw)
+    required: true
+   
+  args:
+    description: Optional extra arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run Diligent Tools GPU Tests
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS:    ${{runner.os}}
+        INPUT_MODE:         ${{inputs.mode}}
+        INPUT_ARGS:         ${{inputs.args}}
+      shell: bash
+      run: |
+        # Run Diligent Tools GPU Tests
+        chmod +x "${{github.action_path}}/run_tools_gpu_tests.sh"
+        "${{github.action_path}}/run_tools_gpu_tests.sh"

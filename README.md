@@ -154,3 +154,18 @@ steps:
   if:   success()
   uses: DiligentGraphics/github-action/run-tools-tests@master
 ```
+
+
+## run-tools-gpu-tests
+
+Runs Diligent Tools GPU tests for the current configuration.
+
+Example:
+
+```yml
+- name: DiligentToolsGPUTest D3D11
+  if:   success()
+  uses: DiligentGraphics/github-action/run-tools-gpu-tests@master
+  with:
+    mode:    d3d11_sw
+```
