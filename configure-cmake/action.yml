@@ -86,4 +86,8 @@ runs:
       run: |
         # Verify configuration
         chmod +x "${{github.action_path}}/verify_config.sh"
-        "${{github.action_path}}/verify_config.sh"
+        EXIT_CODE=0
+        "${{github.action_path}}/verify_config.sh" || EXIT_CODE=$?
+        if [[ "$EXIT_CODE" != "0" ]]; then
+          echo "::error:: CMake configuration verification failed! Please examine CMake output to find mismatches."
+        fi
