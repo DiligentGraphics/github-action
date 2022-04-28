@@ -1,0 +1,34 @@
+name: "DiligentGraphics: Run Core GPU Tests"
+description: "Run tests from the DiligentCoreAPITest suite"
+
+inputs:
+  mode:
+    description: Graphics mode (d3d11_sw, d3d12_sw)
+    required: true
+
+  use_dxc:
+    description: Whether to use DXC compiler
+    default: "false"
+    required: false
+   
+  args:
+    description: Optional extra arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run Diligent Core GPU Tests
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS:    ${{runner.os}}
+        INPUT_MODE:         ${{inputs.mode}}
+        INPUT_USE_DXC:      ${{inputs.use_dxc}}
+        INPUT_ARGS:         ${{inputs.args}}
+        INPUT_IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
+      shell: bash
+      run: |
+        # Run Diligent Core GPU Tests
+        chmod +x "${{github.action_path}}/run_core_gpu_tests.sh"
+        "${{github.action_path}}/run_core_gpu_tests.sh"

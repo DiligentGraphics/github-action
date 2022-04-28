@@ -111,6 +111,7 @@ steps:
     target: install # Optional target
 ```
 
+
 ## run-core-tests
 
 Runs Diligent Core tests for the current configuration.
@@ -122,4 +123,20 @@ steps:
 - name: DiligentCoreTest
   if:   success()
   uses: DiligentGraphics/github-action/run-core-tests@master
+```
+
+
+## run-core-gpu-tests
+
+Runs Diligent Core GPU tests for the current configuration.
+
+Example:
+
+```yml
+- name: DiligentCoreAPITest D3D12 DXC
+  if:   success()
+  uses: DiligentGraphics/github-action/run-core-gpu-tests@master
+  with:
+    mode:    d3d12_sw
+    use_dxc: true
 ```
