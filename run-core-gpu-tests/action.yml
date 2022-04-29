@@ -34,6 +34,7 @@ runs:
         "${{github.action_path}}/run_core_gpu_tests.sh"
 
     - name: Verify Test Output
+      if: success()
       env:
         INPUT_MODE:    ${{inputs.mode}}
         INPUT_USE_DXC: ${{inputs.use_dxc}}

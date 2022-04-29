@@ -17,9 +17,9 @@ runs:
     - name: Run Diligent Tools GPU Tests
       working-directory: ${{github.workspace}}
       env:
-        INPUT_RUNNER_OS:    ${{runner.os}}
-        INPUT_MODE:         ${{inputs.mode}}
-        INPUT_ARGS:         ${{inputs.args}}
+        INPUT_RUNNER_OS: ${{runner.os}}
+        INPUT_MODE:      ${{inputs.mode}}
+        INPUT_ARGS:      ${{inputs.args}}
       shell: bash
       run: |
         # Run Diligent Tools GPU Tests
@@ -27,6 +27,7 @@ runs:
         "${{github.action_path}}/run_tools_gpu_tests.sh"
 
     - name: Verify Test Output
+      if: success()
       env:
         INPUT_MODE: ${{inputs.mode}}
       shell: bash
