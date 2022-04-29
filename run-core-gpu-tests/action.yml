@@ -29,7 +29,7 @@ runs:
         INPUT_IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
       shell: bash
       run: |
-        # Run Diligent Core GPU Tests
+        # Diligent Core GPU Tests
         chmod +x "${{github.action_path}}/run_core_gpu_tests.sh"
         "${{github.action_path}}/run_core_gpu_tests.sh"
 

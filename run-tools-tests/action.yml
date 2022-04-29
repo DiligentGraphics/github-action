@@ -17,6 +17,6 @@ runs:
         INPUT_ARGS:      ${{inputs.args}}
       shell: bash
       run: |
-        # Run Diligent Tools Tests
+        # Diligent Tools Tests
         chmod +x "${{github.action_path}}/run_tools_tests.sh"
         "${{github.action_path}}/run_tools_tests.sh"

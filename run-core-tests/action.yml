@@ -18,6 +18,6 @@ runs:
         INPUT_IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
       shell: bash
       run: |
-        # Run Diligent Core Tests
+        # Diligent Core Tests
         chmod +x "${{github.action_path}}/run_core_tests.sh"
         "${{github.action_path}}/run_core_tests.sh"

@@ -22,7 +22,7 @@ runs:
         INPUT_ARGS:      ${{inputs.args}}
       shell: bash
       run: |
-        # Run Diligent Tools GPU Tests
+        # Diligent Tools GPU Tests
         chmod +x "${{github.action_path}}/run_tools_gpu_tests.sh"
         "${{github.action_path}}/run_tools_gpu_tests.sh"
 
