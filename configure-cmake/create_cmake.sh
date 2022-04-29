@@ -20,3 +20,7 @@ fi
 if [ -d "./DiligentSamples" ]; then
     echo "add_subdirectory(DiligentSamples)" >> CMakeLists.txt
 fi
+
+if [ -d "./DiligentCorePro" ]; then
+    echo "add_subdirectory(DiligentCorePro)" >> CMakeLists.txt
+fi
