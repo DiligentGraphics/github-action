@@ -14,7 +14,7 @@ runs:
       working-directory: ${{env.DILIGENT_BUILD_DIR}}
       shell: bash
       run: |
-        # Run CMake build
+        # CMake build
         # DILIGENT_BUILD_TYPE is set by configure-cmake (configure_cmake.sh)
         CMAKE_CMD="cmake --build . --config $DILIGENT_BUILD_TYPE"
         if [[ "${{inputs.target}}" != "" ]]; then
