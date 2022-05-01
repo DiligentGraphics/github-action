@@ -25,5 +25,5 @@ echo "$BIN_PATH"
 # Can't just use "$BIN_PATH" as it will split the string at spaces ignoring quotes
 # https://unix.stackexchange.com/questions/444946/how-can-we-run-a-command-stored-in-a-variable
 # tee overwrites output file by default
-bash -c "$BIN_PATH" 2>&1 | tee "$GITHUB_WORKSPACE/TestOutput.log"
-exit ${PIPESTATUS[0]}
+# -o pipefail makes the pipe return the error code of the last command to exit with a non-zero status
+bash -c -o pipefail "$BIN_PATH" 2>&1 | tee "$GITHUB_WORKSPACE/TestOutput.log"
