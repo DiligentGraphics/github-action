@@ -72,3 +72,4 @@ echo "$CMAKE_CMD"
 # Capture CMake output to verify it later.
 # NOTE: CMake directs all user messages to stderr, so redirect it to stdout
 bash -c "$CMAKE_CMD" 2>&1 | tee "$GITHUB_WORKSPACE/CMakeOutput.log"
+exit ${PIPESTATUS[0]}

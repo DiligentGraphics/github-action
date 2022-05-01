@@ -26,3 +26,4 @@ echo "$BIN_PATH"
 # https://unix.stackexchange.com/questions/444946/how-can-we-run-a-command-stored-in-a-variable
 # tee overwrites output file by default
 bash -c "$BIN_PATH" 2>&1 | tee "$GITHUB_WORKSPACE/TestOutput.log"
+exit ${PIPESTATUS[0]}
