@@ -67,9 +67,13 @@ echo "DILIGENT_INSTALL_DIR=$BUILD_DIRECTORY/install" >> $GITHUB_ENV
 
 echo "$CMAKE_CMD"
 
+
+# Make the pipe return the error code of the last command to exit with a non-zero status
+# (note that passing '-o pipefail' to bash does not work)
+set -o pipefail
+
 # Can't just use "$CMAKE_CMD" as it will split the string at spaces ignoring quotes
 # https://unix.stackexchange.com/questions/444946/how-can-we-run-a-command-stored-in-a-variable
 # Capture CMake output to verify it later.
 # NOTE: CMake directs all user messages to stderr, so redirect it to stdout
-# -o pipefail makes the pipe return the error code of the last command to exit with a non-zero status
-bash -c -o pipefail "$CMAKE_CMD" 2>&1 | tee "$GITHUB_WORKSPACE/CMakeOutput.log"
+bash -c "$CMAKE_CMD" 2>&1 | tee "$GITHUB_WORKSPACE/CMakeOutput.log"
