@@ -1,6 +1,6 @@
 # github-action
 
-Custom actions used by the Diligent Engine CI
+Custom actions used by the [Diligent Engine](https://github.com/DiligentGraphics/DiligentEngine) CI.
 
 ## checkout
 
