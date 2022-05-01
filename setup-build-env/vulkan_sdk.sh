@@ -7,11 +7,11 @@ wget -O $VK_SDK_DMG https://sdk.lunarg.com/sdk/download/$VULKAN_SDK_VER/mac/$VK_
 export VK_SDK_PATH=~/VulkanSDK
 sudo /Volumes/vulkansdk-macos-$VULKAN_SDK_VER/InstallVulkan.app/Contents/MacOS/InstallVulkan --root $VK_SDK_PATH --accept-licenses --default-answer --confirm-command install
 if [ ! -f "$VK_SDK_PATH/macOS/lib/libvulkan.dylib" ]; then
-    echo "Ubale to find libvulkan.dylib in the SDK."
+    echo "Unable to find libvulkan.dylib in the SDK."
     exit 1
 fi
 if [ ! -d "$VK_SDK_PATH/MoltenVK" ]; then
-    echo "Ubale to find MoltenVK folder in the SDK."
+    echo "Unable to find MoltenVK folder in the SDK."
     exit 1
 fi
 
