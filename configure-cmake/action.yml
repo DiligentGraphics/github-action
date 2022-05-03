@@ -50,7 +50,7 @@ runs:
     # https://docs.github.com/en/actions/learn-github-actions/contexts
 
     - name: Generate CMake File
-      if: ${{ endsWith(github.repository, 'Tools') || endsWith(github.repository, 'FX') || endsWith(github.repository, 'Samples') }}
+      if: ${{ endsWith(github.repository, 'Tools') || endsWith(github.repository, 'FX') || endsWith(github.repository, 'Samples') || endsWith(github.repository, 'CorePro') }}
       shell: bash
       run: |
         # Generate CMake File
