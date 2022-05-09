@@ -34,8 +34,8 @@ steps:
     uses: DiligentGraphics/github-action/setup-build-env@v1
     with:
       platform:           Win32     # UWP, Linux, MacOS, tvOS, iOS, Android, Emscripten
-      setup-ninja:        true      # Optional
-      ninja-vs-arch:      x64       # When ninja is used for VS build
+      cmake-generator:    Ninja     # Optional
+      ninja-vs-arch:      x64       # When Ninja is used for VS build
       vulkan-sdk-version: 1.3.204.1 # Optional, see defaults below
       java-version:       17        # Optional, see defaults below
       emsdk-version:      3.1.9     # Optional, see defaults below

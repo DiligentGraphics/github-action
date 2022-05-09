@@ -21,10 +21,9 @@ inputs:
     required: false
     default: '3.1.9'
 
-  setup-ninja:
-    description: Whether to set up Ninja
+  cmake-generator:
+    description: CMake generator
     required: false
-    default: 'false'
 
   ninja-vs-arch:
     description: Ninja architecture for Visual Studio build (x64 or Win32)
@@ -51,11 +50,11 @@ runs:
         fi
 
     - name: Setup Ninja
-      if: ${{ success() && (inputs.setup-ninja == 'true' || inputs.platform == 'Emscripten') }}
+      if: ${{ success() && (contains(inputs.cmake-generator, 'Ninja') || inputs.platform == 'Emscripten') }}
       uses: seanmiddleditch/gha-setup-ninja@master
 
     - name: Setup VS Development Environment for Ninja
-      if: ${{ success() && inputs.setup-ninja == 'true' && runner.os == 'Windows' }}
+      if: ${{ success() && contains(inputs.cmake-generator, 'Ninja') && runner.os == 'Windows' }}
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ inputs.ninja-vs-arch }}
