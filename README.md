@@ -13,7 +13,8 @@ steps:
 - name: Checkout
     uses: DiligentGraphics/github-action/checkout@master
     with:
-      module: Tools # Optional; by default, current module is checked out
+      module:     Tools # Optional; by default, current module is checked out
+      submodules: true  # Optional; by default, 'recursive' is used
 ```
 
 ## setup-build-env

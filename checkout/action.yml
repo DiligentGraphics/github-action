@@ -7,6 +7,11 @@ inputs:
     required: false
     default: ${{ github.repository }}
 
+  submodules:
+    description: Whether to checkout submodules (passed to actions/checkout)
+    required: false
+    default: recursive
+
 runs:
   using: "composite" # must be set to "composite"
   steps:
@@ -17,7 +22,7 @@ runs:
       with:
         repository: DiligentGraphics/DiligentSamples
         path:       DiligentSamples
-        submodules: recursive
+        submodules: ${{ inputs.submodules }}
 
     - name: Clone DiligentFX
       id: checkout_fx
@@ -26,7 +31,7 @@ runs:
       with:
         repository: DiligentGraphics/DiligentFX
         path:       DiligentFX
-        submodules: recursive
+        submodules: ${{ inputs.submodules }}
 
     - name: Clone DiligentTools
       id: checkout_tools
@@ -35,7 +40,7 @@ runs:
       with:
         repository: DiligentGraphics/DiligentTools
         path:       DiligentTools
-        submodules: recursive
+        submodules: ${{ inputs.submodules }}
 
     - name: Clone DiligentCore
       id: checkout_core
@@ -44,4 +49,4 @@ runs:
       with:
         repository: DiligentGraphics/DiligentCore
         path:       DiligentCore
-        submodules: recursive
+        submodules: ${{ inputs.submodules }}
