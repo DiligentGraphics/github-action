@@ -1,0 +1,16 @@
+name: "DiligentGraphics: Run HLSL2GLSL converter tests"
+description: "Run HLSL2GLSLConverterApp tests"
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run HLSL2GLSLConverterApp Test
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS: ${{runner.os}}
+      shell: bash
+      run: |
+        # HLSL2GLSLConverterApp Test
+        chmod +x "${{github.action_path}}/run_hlsl2glsl_converter_tests.sh"
+        "${{github.action_path}}/run_hlsl2glsl_converter_tests.sh"
