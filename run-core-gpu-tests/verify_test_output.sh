@@ -16,6 +16,8 @@ elif [[ "$INPUT_MODE" == "gl" ]]; then
     MODE_STR="OpenGL"
 elif [[ "$INPUT_MODE" == "vk" ]]; then
     MODE_STR="Vulkan"
+elif [[ "$INPUT_MODE" == "vk_sw" ]]; then
+    MODE_STR="Vulkan-SW"
 fi
 MODE_STR="Running tests in $MODE_STR mode"
 

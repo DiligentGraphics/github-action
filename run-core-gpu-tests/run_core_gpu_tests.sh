@@ -22,8 +22,7 @@ fi
 
 BIN_PATH="$BIN_PATH --mode=$INPUT_MODE"
 if [[ "$INPUT_USE_DXC" == "true" ]]; then
-    # Disable tests that are not relevant for DXC to save time
-    BIN_PATH="$BIN_PATH --shader_compiler=dxc --gtest_filter=-TextureCreation*"
+    BIN_PATH="$BIN_PATH --shader_compiler=dxc"
 fi
 
 if [[ "$INPUT_ARGS" != "" ]]; then
