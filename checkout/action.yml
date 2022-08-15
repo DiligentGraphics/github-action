@@ -50,3 +50,10 @@ runs:
         repository: DiligentGraphics/DiligentCore
         path:       DiligentCore
         submodules: ${{ inputs.submodules }}
+
+    - name: Clone DiligentTestData
+      if: ${{ steps.checkout_samples.conclusion == 'success' && (runner.os == 'Windows' || runner.os == 'Linux') }}
+      uses: actions/checkout@v2
+      with:
+        repository: DiligentGraphics/DiligentTestData
+        path:       DiligentTestData
