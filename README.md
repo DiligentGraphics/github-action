@@ -182,6 +182,7 @@ Example:
 - name: Sample Tests D3D11
     uses: DiligentGraphics/github-action/run-sample-tests@v1
     with:
-      args:              "--mode d3d11 --adapter sw"
-      golden-image-mode: "compare_update"
+      mode:                d3d12_sw
+      golden-image-mode:   compare_update
+      non-separable-progs: false
 ```

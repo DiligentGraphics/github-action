@@ -2,15 +2,20 @@ name: "DiligentGraphics: Run Sample Tests"
 description: "Run sample and tutorial tests"
 
 inputs:
-  args:
-    description: 'test arguments (e.g. "--mode d3d11 --adapter sw")'
+  mode:
+    description: 'Test mode (e.g. d3d11, d3d12_sw, gl, etc.)'
     required: true
 
   golden-image-mode:
     description: 'Golden image processing mode: "compare" (default), "capture", or "compare_update"'
     required: false
     default: 'compare'
-    
+
+  non-separable-progs:
+    description: Whether to force non-separable OpenGL programs
+    required: false
+    default: 'false'
+
 runs:
   using: "composite" # must be set to "composite"
 
@@ -21,7 +26,11 @@ runs:
       shell: cmd
       run: |
         :: Sample Tests
-        ProcessGoldenImages.bat "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "${{inputs.args}}"
+        set args=--mode ${{inputs.mode}}
+        if "${{inputs.non-separable-progs}}" == "true" (
+          set args=%args% --non_separable_progs 1
+        )
+        ProcessGoldenImages.bat "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "%args%"
 
     - name: Linux Tests
       if: ${{ runner.os == 'Linux' }}
@@ -29,5 +38,9 @@ runs:
       shell: bash
       run: |
         # Sample Tests
+        args="--mode ${{inputs.mode}}"
+        if [[ "${{inputs.non-separable-progs}}" == "true" ]]; then
+          args="$args --non_separable_progs 1"
+        fi
         chmod +x ./ProcessGoldenImages.sh
-        ./ProcessGoldenImages.sh "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "${{inputs.args}}"
+        ./ProcessGoldenImages.sh "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "$args"
