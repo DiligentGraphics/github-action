@@ -49,15 +49,15 @@ runs:
       shell: bash
       run: |
         # Download Linux dependencies
-        sudo apt-get update && sudo apt-get install build-essential libx11-dev libgl1-mesa-dev mesa-vulkan-drivers
+        sudo apt-get update && sudo apt-get install build-essential libx11-dev libgl1-mesa-dev mesa-vulkan-drivers xvfb
         if [[ "${{ endsWith(inputs.module, 'Samples') || endsWith(inputs.module, 'Engine') }}" == "true" ]]; then
-          sudo apt-get install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev xvfb
-          # Start Xvfb (an in-memory display server) to allow tests to run
-          Xvfb :99 & # '&' starts the preceding command in the background
-          echo "DISPLAY=:99" >> $GITHUB_ENV
-          # Note that it takes some time for Xvfb to start, but there are plenty of steps before it is used by tests
+          sudo apt-get install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
         fi
-
+        # Start Xvfb (an in-memory display server) to allow tests to run
+        Xvfb :99 & # '&' starts the preceding command in the background
+        echo "DISPLAY=:99" >> $GITHUB_ENV
+        # Note that it takes some time for Xvfb to start, but there are plenty of steps before it is used by tests
+  
     - name: Setup Ninja
       if: ${{ success() && (contains(inputs.cmake-generator, 'Ninja') || inputs.platform == 'Emscripten') }}
       uses: seanmiddleditch/gha-setup-ninja@master
