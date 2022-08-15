@@ -25,6 +25,10 @@ if [[ "$INPUT_USE_DXC" == "true" ]]; then
     BIN_PATH="$BIN_PATH --shader_compiler=dxc"
 fi
 
+if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then
+    BIN_PATH="$BIN_PATH --non_separable_progs"
+fi
+
 if [[ "$INPUT_ARGS" != "" ]]; then
     BIN_PATH="$BIN_PATH $INPUT_ARGS"
 fi

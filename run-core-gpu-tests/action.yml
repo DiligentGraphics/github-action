@@ -6,11 +6,16 @@ inputs:
     description: Graphics mode (d3d11_sw, d3d12_sw)
     required: true
 
-  use_dxc:
+  use-dxc:
     description: Whether to use DXC compiler
     default: "false"
     required: false
-   
+
+  non-separable-progs:
+    description: Whether to force non-separable OpenGL programs
+    default: "false"
+    required: false
+
   args:
     description: Optional extra arguments to pass to the test
     required: false
@@ -22,11 +27,12 @@ runs:
     - name: Run Diligent Core GPU Tests
       working-directory: ${{github.workspace}}
       env:
-        INPUT_RUNNER_OS:    ${{runner.os}}
-        INPUT_MODE:         ${{inputs.mode}}
-        INPUT_USE_DXC:      ${{inputs.use_dxc}}
-        INPUT_ARGS:         ${{inputs.args}}
-        INPUT_IS_SUBMODULE: ${{!endsWith(github.repository, 'Core')}}
+        INPUT_RUNNER_OS:     ${{runner.os}}
+        INPUT_MODE:          ${{inputs.mode}}
+        INPUT_USE_DXC:       ${{inputs.use-dxc}}
+        INPUT_NON_SEP_PROGS: ${{inputs.non-separable-progs}}
+        INPUT_ARGS:          ${{inputs.args}}
+        INPUT_IS_SUBMODULE:  ${{!endsWith(github.repository, 'Core')}}
       shell: bash
       run: |
         # Diligent Core GPU Tests
@@ -36,8 +42,9 @@ runs:
     - name: Verify Test Output
       if: success()
       env:
-        INPUT_MODE:    ${{inputs.mode}}
-        INPUT_USE_DXC: ${{inputs.use_dxc}}
+        INPUT_MODE:          ${{inputs.mode}}
+        INPUT_USE_DXC:       ${{inputs.use-dxc}}
+        INPUT_NON_SEP_PROGS: ${{inputs.non-separable-progs}}
       shell: bash
       run: |
         # Verify Test Output

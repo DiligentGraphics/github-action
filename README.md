@@ -138,8 +138,9 @@ Example:
   if:   success()
   uses: DiligentGraphics/github-action/run-core-gpu-tests@master
   with:
-    mode:    d3d12_sw
-    use_dxc: true
+    mode:                d3d12_sw
+    use-dxc:             true
+    non-separable-progs: false
 ```
 
 

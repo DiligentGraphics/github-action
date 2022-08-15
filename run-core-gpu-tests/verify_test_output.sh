@@ -55,6 +55,17 @@ if [[ "$INPUT_USE_DXC" == "true" ]]; then
 fi
 
 
+if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then
+    SEP_PROGS_OFF_STR='Features.SeparablePrograms = Off'
+    if [[ "$TEST_LOG" == *"$SEP_PROGS_OFF_STR"* ]]; then
+        echo "Verifying '$SEP_PROGS_OFF_STR': OK"
+    else
+        echo "Verifying '$SEP_PROGS_OFF_STR': FAIL"
+        RES="FAIL"
+    fi
+fi
+
+
 if [[ "$RES" != "OK" ]]; then
     # echo "Captured Test log:"
     # echo "$TEST_LOG"
