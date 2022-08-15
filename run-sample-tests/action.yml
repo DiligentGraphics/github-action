@@ -1,0 +1,33 @@
+name: "DiligentGraphics: Run Sample Tests"
+description: "Run sample and tutorial tests"
+
+inputs:
+  args:
+    description: 'test arguments (e.g. "--mode d3d11 --adapter sw")'
+    required: true
+
+  golden-image-mode:
+    description: 'Golden image processing mode: "compare" (default), "capture", or "compare_update"'
+    required: false
+    default: 'compare'
+    
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Windows Tests
+      if: ${{ runner.os == 'Windows' }}
+      working-directory: ${{github.workspace}}/DiligentSamples/Tests
+      shell: cmd
+      run: |
+        :: Sample Tests
+        ProcessGoldenImages.bat "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "${{inputs.args}}"
+
+    - name: Linux Tests
+      if: ${{ runner.os == 'Linux' }}
+      working-directory: ${{github.workspace}}/DiligentSamples/Tests
+      shell: bash
+      run: |
+        # Sample Tests
+        chmod +x ./ProcessGoldenImages.sh
+        ./ProcessGoldenImages.sh "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "${{inputs.args}}"

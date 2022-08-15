@@ -171,3 +171,17 @@ Example:
   with:
     mode:    d3d11_sw
 ```
+
+## run-sample-tests
+
+Runs sample and tutorial tests for the current configuration.
+
+Example:
+
+```yml
+- name: Sample Tests D3D11
+    uses: DiligentGraphics/github-action/run-sample-tests@v1
+    with:
+      args:              "--mode d3d11 --adapter sw"
+      golden-image-mode: "compare_update"
+```
