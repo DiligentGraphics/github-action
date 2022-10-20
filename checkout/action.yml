@@ -18,7 +18,7 @@ runs:
     - name: Clone DiligentSamples
       id: checkout_samples
       if: ${{ endsWith(inputs.module, 'Samples') }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: DiligentGraphics/DiligentSamples
         path:       DiligentSamples
@@ -27,7 +27,7 @@ runs:
     - name: Clone DiligentFX
       id: checkout_fx
       if: ${{ steps.checkout_samples.conclusion == 'success' || endsWith(inputs.module, 'FX') }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: DiligentGraphics/DiligentFX
         path:       DiligentFX
@@ -36,7 +36,7 @@ runs:
     - name: Clone DiligentTools
       id: checkout_tools
       if: ${{ steps.checkout_fx.conclusion == 'success' || endsWith(inputs.module, 'Tools') }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: DiligentGraphics/DiligentTools
         path:       DiligentTools
@@ -45,7 +45,7 @@ runs:
     - name: Clone DiligentCore
       id: checkout_core
       if: ${{ steps.checkout_tools.conclusion == 'success' ||  endsWith(inputs.module, 'Core') }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: DiligentGraphics/DiligentCore
         path:       DiligentCore
@@ -53,7 +53,7 @@ runs:
 
     - name: Clone DiligentTestData
       if: ${{ steps.checkout_samples.conclusion == 'success' && (runner.os == 'Windows' || runner.os == 'Linux') }}
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: DiligentGraphics/DiligentTestData
         path:       DiligentTestData
