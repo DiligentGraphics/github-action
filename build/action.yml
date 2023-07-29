@@ -5,6 +5,9 @@ inputs:
   target:
     description: Target to build (optional)
     required: false
+  build-args:
+    description: Additional arguments to pass to CMake build command (optional)
+    required: false
 
 runs:
   using: "composite" # must be set to "composite"
@@ -21,6 +24,9 @@ runs:
           CMAKE_CMD="$CMAKE_CMD --target ${{inputs.target}}"
         fi
         CMAKE_CMD="$CMAKE_CMD -j2"
+        if [[ "${{inputs.build-args}}" != "" ]]; then
+          CMAKE_CMD="$CMAKE_CMD ${{inputs.build-args}}"
+        fi
         echo $CMAKE_CMD
 
         # Can't just use "$CMAKE_CMD" as it will split the string at spaces ignoring quotes
