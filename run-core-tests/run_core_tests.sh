@@ -14,6 +14,10 @@ if [ -d "$BIN_PATH/$DILIGENT_BUILD_TYPE" ]; then
     BIN_PATH="$BIN_PATH/$DILIGENT_BUILD_TYPE"
 fi
 
+echo "$BIN_PATH contents:"
+ls $BIN_PATH
+echo "END"
+
 BIN_PATH="$BIN_PATH/DiligentCoreTest"
 
 if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
