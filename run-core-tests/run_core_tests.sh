@@ -18,6 +18,10 @@ echo "$BIN_PATH contents:"
 ls $BIN_PATH
 echo "END"
 
+echo "PATH: $PATH"
+PATH="$PATH;C:/ProgramData/chocolatey/bin/"
+echo "Updated PATH: $PATH"
+
 BIN_PATH="$BIN_PATH/DiligentCoreTest"
 
 if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
