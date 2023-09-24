@@ -35,6 +35,7 @@ fi
 echo "$BIN_PATH"
 
 ldd $BIN_PATH
+chmod +x "$BIN_PATH"
 
 # Can't just use "$BIN_PATH" as it will split the string at spaces ignoring quotes
 # https://unix.stackexchange.com/questions/444946/how-can-we-run-a-command-stored-in-a-variable
