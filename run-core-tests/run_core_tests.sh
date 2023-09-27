@@ -22,6 +22,9 @@ echo "PATH: $PATH"
 PATH="$PATH;C:/ProgramData/chocolatey/bin/"
 echo "Updated PATH: $PATH"
 
+echo "where.exe libstdc++-6.dll:"
+where.exe libstdc++-6.dll
+
 BIN_PATH="$BIN_PATH/DiligentCoreTest"
 
 if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
