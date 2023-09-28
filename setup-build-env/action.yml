@@ -90,7 +90,9 @@ runs:
       with:
         version: ${{ inputs.emsdk-version }}
 
-    #- name: Find libstdc++-6.dll
-    #  shell: bash
-    #  run: |
-    #    find / -name libstdc++-6.dll
+    - name: Fix MinGW Misconfiguration
+      if: ${{ success() && inputs.platform == 'Win32' && inputs.cmake-generator == 'MinGW Makefiles' }}
+      shell: bash
+      run: |
+        # Workaround for https://github.com/actions/runner-images/issues/8399
+        echo "C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin" >> $GITHUB_PATH
