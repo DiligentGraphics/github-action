@@ -43,6 +43,9 @@ runs:
       run: |
         # Set Environment Variables
         echo "DILIGENT_TARGET_PLATFORM=${{inputs.platform}}" >> $GITHUB_ENV
+        if [[ "${{ inputs.platform == 'Win32' && inputs.cmake-generator == 'MinGW Makefiles' }}" == "true" ]]; then
+          echo "DILIGENT_MINGW64_BIN_DIR=/c/mingw64/bin" >> $GITHUB_ENV
+        fi
 
     - name: Download Linux dependencies
       if: ${{ inputs.platform == 'Linux' }}
@@ -57,7 +60,7 @@ runs:
         Xvfb :99 & # '&' starts the preceding command in the background
         echo "DISPLAY=:99" >> $GITHUB_ENV
         # Note that it takes some time for Xvfb to start, but there are plenty of steps before it is used by tests
-  
+
     - name: Setup Ninja
       if: ${{ success() && (contains(inputs.cmake-generator, 'Ninja') || inputs.platform == 'Emscripten') }}
       uses: seanmiddleditch/gha-setup-ninja@master

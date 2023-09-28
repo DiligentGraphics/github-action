@@ -18,6 +18,12 @@ BIN_PATH="$BIN_PATH/DiligentCoreTest"
 
 if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
     BIN_PATH="$BIN_PATH.exe"
+    if [[ "$DILIGENT_MINGW64_BIN_DIR" != "" ]]; then
+        # Workaround for https://github.com/actions/runner-images/issues/8399
+        # Note that echoing mingw bin path to GITHUB_PATH doesn't work as /mingw64/bin
+        # is forced to always be the first entry.
+        PATH="$DILIGENT_MINGW64_BIN_DIR:$PATH"
+    fi
 fi
 
 if [[ "$INPUT_ARGS" != "" ]]; then

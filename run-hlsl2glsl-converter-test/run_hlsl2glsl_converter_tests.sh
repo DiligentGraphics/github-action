@@ -12,6 +12,12 @@ BIN_PATH="$BIN_PATH/HLSL2GLSLConverter"
 
 if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
     BIN_PATH="$BIN_PATH.exe"
+    if [[ "$DILIGENT_MINGW64_BIN_DIR" != "" ]]; then
+        # Workaround for https://github.com/actions/runner-images/issues/8399
+        # Note that echoing mingw bin path to GITHUB_PATH doesn't work as /mingw64/bin
+        # is forced to always be the first entry.
+        PATH="$DILIGENT_MINGW64_BIN_DIR:$PATH"
+    fi
 fi
 
 BIN_PATH="$BIN_PATH -i TessTestDX.dsh -o TessTestGL.dsh -t ds -d IncludeDir1 -d IncludeDir2 --no-glsl-definitions -p"
