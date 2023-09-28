@@ -44,6 +44,7 @@ runs:
         # Set Environment Variables
         echo "DILIGENT_TARGET_PLATFORM=${{inputs.platform}}" >> $GITHUB_ENV
         echo "DILIGENT_CMAKE_GENERATOR=${{inputs.cmake-generator}}" >> $GITHUB_ENV
+        echo "PATH: $PATH"
 
     - name: Download Linux dependencies
       if: ${{ inputs.platform == 'Linux' }}
