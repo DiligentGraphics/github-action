@@ -32,3 +32,10 @@ runs:
         # Can't just use "$CMAKE_CMD" as it will split the string at spaces ignoring quotes
         # https://unix.stackexchange.com/questions/444946/how-can-we-run-a-command-stored-in-a-variable
         bash -c "$CMAKE_CMD"
+
+    - name: Fix MinGW Misconfiguration
+      if: ${{ success() && ${{env.DILIGENT_TARGET_PLATFORM}} == 'Win32' && ${{env.DILIGENT_CMAKE_GENERATOR}} == 'MinGW Makefiles' }}
+      shell: bash
+      run: |
+        # Workaround for https://github.com/actions/runner-images/issues/8399
+        echo "C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin" >> $GITHUB_PATH

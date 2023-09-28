@@ -43,6 +43,7 @@ runs:
       run: |
         # Set Environment Variables
         echo "DILIGENT_TARGET_PLATFORM=${{inputs.platform}}" >> $GITHUB_ENV
+        echo "DILIGENT_CMAKE_GENERATOR=${{inputs.cmake-generator}}" >> $GITHUB_ENV
 
     - name: Download Linux dependencies
       if: ${{ inputs.platform == 'Linux' }}
@@ -90,9 +91,3 @@ runs:
       with:
         version: ${{ inputs.emsdk-version }}
 
-    - name: Fix MinGW Misconfiguration
-      if: ${{ success() && inputs.platform == 'Win32' && inputs.cmake-generator == 'MinGW Makefiles' }}
-      shell: bash
-      run: |
-        # Workaround for https://github.com/actions/runner-images/issues/8399
-        echo "C:/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin" >> $GITHUB_PATH
