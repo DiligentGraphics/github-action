@@ -21,8 +21,6 @@ echo "END"
 echo "/c/ProgramData/chocolatey/bin:"
 ls /c/ProgramData/chocolatey/bin
 
-echo "PATH: $PATH"
-
 #PATH="/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin:$PATH"
 #echo "Updated PATH: $PATH"
 
@@ -33,11 +31,13 @@ BIN_PATH="$BIN_PATH/DiligentCoreTest"
 
 if [[ "$INPUT_RUNNER_OS" == "Windows" ]]; then
     BIN_PATH="$BIN_PATH.exe"
-    if [[ "$DILIGENT_CMAKE_GENERATOR" == "MinGW Makefiles" ]]; then
+    if [[ "$DILIGENT_MINGW64_BIN_DIR" != "" ]]; then
         # Workaround for https://github.com/actions/runner-images/issues/8399 
-        PATH="/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin:$PATH"
+        PATH="$DILIGENT_MINGW64_BIN_DIR:$PATH"
     fi
 fi
+
+echo "PATH: $PATH"
 
 if [[ "$INPUT_ARGS" != "" ]]; then
     BIN_PATH="$BIN_PATH $INPUT_ARGS"

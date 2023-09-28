@@ -43,7 +43,9 @@ runs:
       run: |
         # Set Environment Variables
         echo "DILIGENT_TARGET_PLATFORM=${{inputs.platform}}" >> $GITHUB_ENV
-        echo "DILIGENT_CMAKE_GENERATOR=${{inputs.cmake-generator}}" >> $GITHUB_ENV
+        if [[ "${{ inputs.platform == 'Win32' && inputs.cmake-generator == 'MinGW Makefiles' }}" == "true" ]]; then
+          echo "DILIGENT_MINGW64_BIN_DIR=/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin" >> $GITHUB_ENV
+        fi
         echo "PATH: $PATH"
 
     - name: Download Linux dependencies
