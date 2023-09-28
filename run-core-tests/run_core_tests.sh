@@ -18,8 +18,11 @@ echo "$BIN_PATH contents:"
 ls $BIN_PATH
 echo "END"
 
+echo "/c/ProgramData/chocolatey/bin:"
+ls /c/ProgramData/chocolatey/bin
+
 echo "PATH: $PATH"
-PATH="$PATH;C:/ProgramData/chocolatey/bin/"
+PATH="/c/ProgramData/chocolatey/bin:$PATH"
 echo "Updated PATH: $PATH"
 
 echo "where.exe libstdc++-6.dll:"
