@@ -90,7 +90,7 @@ runs:
       with:
         version: ${{ inputs.emsdk-version }}
 
-    - name: Find libstdc++-6.dll
-      shell: bash
-      run: |
-        find / -name libstdc++-6.dll
+    #- name: Find libstdc++-6.dll
+    #  shell: bash
+    #  run: |
+    #    find / -name libstdc++-6.dll

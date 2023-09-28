@@ -22,7 +22,7 @@ echo "/c/ProgramData/chocolatey/bin:"
 ls /c/ProgramData/chocolatey/bin
 
 echo "PATH: $PATH"
-PATH="/c/ProgramData/chocolatey/bin:$PATH"
+PATH="/c/ProgramData/chocolatey/lib/mingw/tools/install/mingw64/bin:$PATH"
 echo "Updated PATH: $PATH"
 
 echo "where.exe libstdc++-6.dll:"
