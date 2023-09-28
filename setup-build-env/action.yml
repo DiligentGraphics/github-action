@@ -89,3 +89,8 @@ runs:
       uses: mymindstorm/setup-emsdk@master
       with:
         version: ${{ inputs.emsdk-version }}
+
+    - name: Find libstdc++-6.dll
+      shell: bash
+      run: |
+        find / -name libstdc++-6.dll
