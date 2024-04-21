@@ -17,7 +17,7 @@ inputs:
   osx-deployment-target:
     description: Deployment target to pass to CMAKE_OSX_DEPLOYMENT_TARGET
     required: false
-    default: '11'
+    default: '13'
 
   osx-architectures:
     description: Architectures to pass to CMAKE_OSX_ARCHITECTURES
