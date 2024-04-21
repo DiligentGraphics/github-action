@@ -23,7 +23,7 @@ runs:
         if [[ "${{inputs.target}}" != "" ]]; then
           CMAKE_CMD="$CMAKE_CMD --target ${{inputs.target}}"
         fi
-        CMAKE_CMD="$CMAKE_CMD -j2"
+        CMAKE_CMD="$CMAKE_CMD -j4" # Warning: -j seems to work same as -j1
         if [[ "${{inputs.build-args}}" != "" ]]; then
           CMAKE_CMD="$CMAKE_CMD ${{inputs.build-args}}"
         fi
