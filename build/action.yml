@@ -18,6 +18,13 @@ runs:
       shell: bash
       run: |
         # CMake build
+        # DILIGENT_MINGW64_BIN_DIR is set by setup-build-env
+        if [[ "$DILIGENT_MINGW64_BIN_DIR" != "" ]]; then
+            # Workaround for https://github.com/actions/runner-images/issues/8399
+            # /mingw64/bin is always added as first entry to PATH at each build step by GitHub Actions
+            # If correct mingw64 bin dir is not in the path, excutables such as RenderStatePackager will fail to run
+            PATH="$DILIGENT_MINGW64_BIN_DIR:$PATH"
+        fi
         # DILIGENT_BUILD_TYPE is set by configure-cmake (configure_cmake.sh)
         CMAKE_CMD="cmake --build . --config $DILIGENT_BUILD_TYPE"
         if [[ "${{inputs.target}}" != "" ]]; then
