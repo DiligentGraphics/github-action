@@ -18,6 +18,8 @@ elif [[ "$INPUT_MODE" == "vk" ]]; then
     MODE_STR="Vulkan"
 elif [[ "$INPUT_MODE" == "vk_sw" ]]; then
     MODE_STR="Vulkan-SW"
+elif [[ "$INPUT_MODE" == "wgpu" ]]; then
+    MODE_STR="WebGPU"
 fi
 MODE_STR="Running tests in $MODE_STR mode"
 
