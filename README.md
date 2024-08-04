@@ -186,3 +186,16 @@ Example:
       golden-image-mode:   compare_update
       non-separable-progs: false
 ```
+
+
+## clean-disk-ubuntu
+
+Removes unneeded packages and tools to free disk space.
+
+Example:
+
+```yml
+- name: Clean Disk
+  uses: DiligentGraphics/github-action/clean-disk-ubuntu@master
+  preserve-android-ndk: 27.0.12077973
+```

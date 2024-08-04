@@ -1,0 +1,104 @@
+name: "DiligentGraphics: Clean Disk Space"
+description: "Remove unneeded packages and tools to free disk space"
+
+inputs:
+  preserve-android-ndk:
+    description: Android NDK version to preserve
+    required: false
+    default: "27.0.12077973"
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name:  Available disk space
+      shell: bash
+      run: |
+        # Available disk space
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove .NET
+      shell: bash
+      run: |
+        # Remove .NET
+        sudo rm -rf /usr/share/dotnet || echo "::warning::Failed to remove .NET"
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove Swift
+      shell: bash
+      run: |
+        # Remove Swift
+        sudo rm -rf /usr/share/swift || echo "::warning::Failed to remove Swift"
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove CodeQL Action Bundles
+      shell: bash
+      run: |
+        # Remove CodeQL Action Bundles
+        sudo rm -rf /opt/hostedtoolcache/CodeQL || echo "::warning::Failed to remove CodeQL Action Bundles"
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove image tool cache
+      shell: bash
+      run: |
+        # Remove image tool cache
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY" || echo "::warning::Failed to remove image tool cache"
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove unused Android NDKs
+      shell: bash
+      run: |
+        # Remove unused Android NDKs
+        ANDROID_NDK_DIR=/usr/local/lib/android/sdk/ndk
+        echo "Current NDKs:"
+        ls $ANDROID_NDK_DIR
+        for dir in $ANDROID_NDK_DIR/* ; do
+          if [ "${dir%/}" != "$ANDROID_NDK_DIR/${{ inputs.preserve-android-ndk }}" ]; then
+            rm -rf "$dir"
+          fi
+        done
+        echo "Remaining NDKs:"
+        ls $ANDROID_NDK_DIR
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove cached Docker images
+      shell: bash
+      run: |
+        # Remove cached Docker images
+        sudo docker image prune --all --force || echo "::warning::Failed to remove Docker images"
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove ASP.NET Core
+      shell: bash
+      run: |
+        # Remove ASP.NET Core
+        sudo apt-get remove -y '^aspnetcore-.*'  --fix-missing || echo "::warning::Failed to remove ASP.NET Core"
+        echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove Azure CLI
+      shell: bash
+      run: |
+        # Remove Azure CLI
+         sudo apt-get remove -y azure-cli --fix-missing || echo "::warning::Failed to remove Azure CLI"
+         echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Remove Chrome and Firefox
+      shell: bash
+      run: |
+         # Remove Chrome and Firefox
+         sudo apt-get remove -y google-chrome-stable firefox --fix-missing || echo "::warning::Failed to remove Chrome and Firefox"
+         echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  APT Cleanup
+      shell: bash
+      run: |
+         # APT Cleanup
+         sudo apt-get autoremove -y || echo "::warning::Failed to remove unneeded packages"
+         sudo apt-get clean || echo "::warning::Failed to clean up"
+         echo -e "Free disk space: $(df -BM / | awk 'NR==2 {print $4}' | sed 's/M//') MB\n "
+
+    - name:  Disk space after cleanup
+      shell: bash
+      run: |
+        # Disk space after cleanup
+        df -h
