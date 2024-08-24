@@ -10,8 +10,8 @@ if [ ! -f "$VK_SDK_PATH/macOS/lib/libvulkan.dylib" ]; then
     echo "Unable to find libvulkan.dylib in the SDK."
     exit 1
 fi
-if [ ! -d "$VK_SDK_PATH/MoltenVK" ]; then
-    echo "Unable to find MoltenVK folder in the SDK."
+if [ ! -d "$VK_SDK_PATH/macOS/lib/MoltenVK.xcframework" ]; then
+    echo "Unable to find MoltenVK.xcframework in the SDK."
     exit 1
 fi
 
