@@ -30,7 +30,8 @@ elif [[ "$DILIGENT_TARGET_PLATFORM" == "Emscripten" ]]; then
 fi
 
 # Disable format validation as it is performed by a standalone action
-CMAKE_CMD="$CMAKE_CMD -DCMAKE_BUILD_TYPE=$INPUT_BUILD_TYPE -DDILIGENT_NO_FORMAT_VALIDATION=ON"
+# NB: double slash before WX is required to prevent bash from interpreting it as path
+CMAKE_CMD="$CMAKE_CMD -DCMAKE_BUILD_TYPE=$INPUT_BUILD_TYPE -DDILIGENT_NO_FORMAT_VALIDATION=ON -DDILIGENT_MSVC_COMPILE_OPTIONS=\"//WX\" -DDILIGENT_CLANG_COMPILE_OPTIONS=\"-Werror\""
 
 # Add path to Vulkan SDK, if defined
 if [[ "$VULKAN_SDK" != "" ]]; then
