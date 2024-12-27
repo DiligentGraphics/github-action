@@ -41,6 +41,11 @@ inputs:
     required: false
     default: ${{ runner.workspace }}/build
 
+  windows-sdk-version:
+    description: Windows SDK version for Visual Studio generator
+    required: false
+    default: '10.0.26100.0'
+
 runs:
   using: "composite" # must be set to "composite"
 
@@ -69,6 +74,7 @@ runs:
         BUILD_DIRECTORY:             "${{ inputs.build-directory }}"
         CC:                          "${{ inputs.cc }}"
         CXX:                         "${{ inputs.cxx }}"
+        WINDOWS_SDK_VERSION:         "${{ inputs.windows-sdk-version }}"
 
       shell: bash
       run: |

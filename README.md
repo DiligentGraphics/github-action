@@ -83,6 +83,7 @@ steps:
     osx-architectures:     arm64      # Required for iOS/tvOS
     cc:                    clang-12   # Optional for Linux
     cxx:                   clang++-12 # Optional for Linux
+    windows-sdk-version:   10.0.22621.0 # Optional for Visual Studio generator
 ```
 
 Default versions are specified in the table below:

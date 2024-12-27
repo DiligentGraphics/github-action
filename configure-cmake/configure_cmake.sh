@@ -23,6 +23,7 @@ if [[ "$CMAKE_GENERATOR" != "" ]]; then
             exit 1
         fi
         CMAKE_CMD="$CMAKE_CMD -A $INPUT_VS_ARCH"
+        CMAKE_CMD="$CMAKE_CMD -D CMAKE_SYSTEM_VERSION=$WINDOWS_SDK_VERSION"
     fi
 elif [[ "$DILIGENT_TARGET_PLATFORM" == "Emscripten" ]]; then
     # Emscripten always uses Ninja
