@@ -72,13 +72,18 @@ runs:
         arch: ${{ inputs.ninja-vs-arch }}
 
     - name: Download Vulkan SDK
-      if: ${{ success() && (inputs.platform == 'MacOS' || inputs.platform == 'iOS' || inputs.platform == 'tvOS') }}
+      if: ${{ success() && (inputs.platform == 'Linux' || inputs.platform == 'MacOS' || inputs.platform == 'iOS' || inputs.platform == 'tvOS') }}
       working-directory: ${{github.action_path}}
       shell: bash
       run: |
         # Download Vulkan SDK
-        chmod +x vulkan_sdk.sh
-        ./vulkan_sdk.sh ${{inputs.vulkan-sdk-version}}
+        if [[ "${{ inputs.platform == 'Linux' }}" == "true" ]]; then
+          chmod +x vulkan_sdk_linux.sh
+          ./vulkan_sdk_linux.sh ${{inputs.vulkan-sdk-version}}
+        else
+          chmod +x vulkan_sdk_mac.sh
+          ./vulkan_sdk_mac.sh ${{inputs.vulkan-sdk-version}}
+        fi
 
     - name: Set up Java
       if: ${{ success() && inputs.platform == 'Android' }}
