@@ -16,6 +16,11 @@ inputs:
     required: false
     default: 'false'
 
+  vk-compatibility:
+    description: Whether to run tests in Vulkan compatibility mode
+    required: false
+    default: 'false'
+
 runs:
   using: "composite" # must be set to "composite"
 
@@ -30,6 +35,9 @@ runs:
         if "${{inputs.non-separable-progs}}" == "true" (
           set args=%args% --non_separable_progs 1
         )
+        if "${{inputs.vk-compatibility}}" == "true" (
+          set args=%args% --vk_compatibility 1
+        )
         ProcessGoldenImages.bat "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "%args%"
 
     - name: Linux Tests
@@ -41,6 +49,9 @@ runs:
         args="--mode ${{inputs.mode}}"
         if [[ "${{inputs.non-separable-progs}}" == "true" ]]; then
           args="$args --non_separable_progs 1"
+        fi
+        if [[ "${{inputs.vk-compatibility}}" == "true" ]]; then
+          args="$args --vk_compatibility 1"
         fi
         chmod +x ./ProcessGoldenImages.sh
         ./ProcessGoldenImages.sh "${{github.workspace}}/DiligentTestData/GoldenImages" ${{inputs.golden-image-mode}} "$args"
