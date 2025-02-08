@@ -26,7 +26,11 @@ if [[ "$INPUT_USE_DXC" == "true" ]]; then
 fi
 
 if [[ "$INPUT_MODE" == "vk_sw" ]]; then
-    GTEST_FILTER="-RayTracingTest/*compacted*:Sparse/*:SparseResourceTest*:DynamicTextureArray/*USAGE_SPARSE*:ArchiveTest.RayTracingPipeline_Async:MeshShaderTest.DrawTrisWithAmplificationShader:PipelineResourceSignatureTest.RunTimeResourceArray*:QueryTest.PipelineStats:QueryTest.Occlusion:QueryTest.BinaryOcclusion"
+    if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
+        GTEST_FILTER="DrawCommandTest*:ClearRenderTargetTest*:ComputeShaderTest*:FenceTest*:GenerateMipsTest*:GPUCompletionAwaitQueueTest*:ReadOnlyDepthTest*:RenderPassTest*"
+    else
+        GTEST_FILTER="-RayTracingTest/*compacted*:Sparse/*:SparseResourceTest*:DynamicTextureArray/*USAGE_SPARSE*:ArchiveTest.RayTracingPipeline_Async:MeshShaderTest.DrawTrisWithAmplificationShader:PipelineResourceSignatureTest.RunTimeResourceArray*:QueryTest.PipelineStats:QueryTest.Occlusion:QueryTest.BinaryOcclusion"
+    fi
 elif [[ "$INPUT_MODE" == "gl" ]]; then
     GTEST_FILTER="-DrawCommandTest.MultiDrawIndirectCount:DrawCommandTest.MultiDrawIndexedIndirectCount:DrawCommandTest.NativeMultiDrawIndexed"
     if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then
@@ -36,6 +40,10 @@ fi
 
 if [[ "$GTEST_FILTER" != "" ]]; then
     BIN_PATH="$BIN_PATH --gtest_filter=$GTEST_FILTER"
+fi
+
+if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
+    BIN_PATH="$BIN_PATH --Features.DynamicRendering=Off"
 fi
 
 if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then

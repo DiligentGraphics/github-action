@@ -57,16 +57,36 @@ if [[ "$INPUT_USE_DXC" == "true" ]]; then
 fi
 
 
-if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then
-    SEP_PROGS_OFF_STR='Features.SeparablePrograms = Off'
-    if [[ "$TEST_LOG" == *"$SEP_PROGS_OFF_STR"* ]]; then
-        echo "Verifying '$SEP_PROGS_OFF_STR': OK"
+if [[ "$INPUT_MODE" == "gl" ]]; then
+    if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then
+        SEP_PROGS_STATE_STR='SeparablePrograms: Disabled'
     else
-        echo "Verifying '$SEP_PROGS_OFF_STR': FAIL"
+        SEP_PROGS_STATE_STR='SeparablePrograms: Enabled'
+	fi
+
+    if [[ "$TEST_LOG" == *"$SEP_PROGS_STATE_STR"* ]]; then
+        echo "Verifying '$SEP_PROGS_STATE_STR': OK"
+    else
+        echo "Verifying '$SEP_PROGS_STATE_STR': FAIL"
         RES="FAIL"
     fi
 fi
 
+
+if [[ "$INPUT_MODE" == "vk_sw" ]]; then
+    if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
+        DYN_RENDERING_STATE_STR='DynamicRendering: Disabled'
+    else
+        DYN_RENDERING_STATE_STR='DynamicRendering: Enabled'
+    fi
+
+    if [[ "$TEST_LOG" == *"$DYN_RENDERING_STATE_STR"* ]]; then
+        echo "Verifying '$DYN_RENDERING_STATE_STR': OK"
+    else
+        echo "Verifying '$DYN_RENDERING_STATE_STR': FAIL"
+        RES="FAIL"
+    fi
+fi
 
 if [[ "$RES" != "OK" ]]; then
     # echo "Captured Test log:"

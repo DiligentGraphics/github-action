@@ -16,6 +16,11 @@ inputs:
     default: "false"
     required: false
 
+  vk-compatibility:
+    description: Whether to run tests in Vulkan compatibility mode
+    default: "false"
+    required: false
+
   args:
     description: Optional extra arguments to pass to the test
     required: false
@@ -31,6 +36,7 @@ runs:
         INPUT_MODE:          ${{inputs.mode}}
         INPUT_USE_DXC:       ${{inputs.use-dxc}}
         INPUT_NON_SEP_PROGS: ${{inputs.non-separable-progs}}
+        INPUT_VK_COMPAT:     ${{inputs.vk-compatibility}}
         INPUT_ARGS:          ${{inputs.args}}
         INPUT_IS_SUBMODULE:  ${{!endsWith(github.repository, 'Core')}}
       shell: bash
@@ -45,6 +51,7 @@ runs:
         INPUT_MODE:          ${{inputs.mode}}
         INPUT_USE_DXC:       ${{inputs.use-dxc}}
         INPUT_NON_SEP_PROGS: ${{inputs.non-separable-progs}}
+        INPUT_VK_COMPAT:     ${{inputs.vk-compatibility}}
       shell: bash
       run: |
         # Verify Test Output
