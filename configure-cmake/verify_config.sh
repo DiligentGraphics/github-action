@@ -10,7 +10,7 @@ fi
 RES="OK"
 
 # Verify generator
-if [[ "$DILIGENT_TARGET_PLATFORM" == "Emscripten" && "$INPUT_GENERATOR" == "" ]]; then
+if [[ "$DILIGENT_TARGET_PLATFORM" == "Web" && "$INPUT_GENERATOR" == "" ]]; then
     # Emscripten always uses Ninja
     INPUT_GENERATOR="Ninja"
 fi

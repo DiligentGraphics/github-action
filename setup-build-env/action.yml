@@ -8,7 +8,7 @@ inputs:
     default: ${{ github.repository }}
 
   platform:
-    description: Target platform (Win32, UWP, Linux, Android, MacOS, iOS, tvOS or Emscripten)
+    description: Target platform (Win32, UWP, Linux, Android, MacOS, iOS, tvOS or Web)
     required: true
 
   vulkan-sdk-version:
@@ -24,7 +24,7 @@ inputs:
   emsdk-version:
     description: Emscripten SDK version
     required: false
-    default: '3.1.74'
+    default: '4.0.0'
 
   cmake-generator:
     description: CMake generator
@@ -62,7 +62,7 @@ runs:
         # Note that it takes some time for Xvfb to start, but there are plenty of steps before it is used by tests
 
     - name: Setup Ninja
-      if: ${{ success() && (contains(inputs.cmake-generator, 'Ninja') || inputs.platform == 'Emscripten') }}
+      if: ${{ success() && (contains(inputs.cmake-generator, 'Ninja') || inputs.platform == 'Web') }}
       uses: seanmiddleditch/gha-setup-ninja@master
 
     - name: Setup VS Development Environment for Ninja
@@ -93,7 +93,7 @@ runs:
         java-version: ${{ inputs.java-version }}
 
     - name: Setup Emscripten SDK
-      if: ${{ success() && inputs.platform == 'Emscripten' }}
+      if: ${{ success() && inputs.platform == 'Web' }}
       uses: mymindstorm/setup-emsdk@master
       with:
         version: ${{ inputs.emsdk-version }}

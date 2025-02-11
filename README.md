@@ -34,21 +34,21 @@ steps:
 - name: Set up build environment
     uses: DiligentGraphics/github-action/setup-build-env@v1
     with:
-      platform:           Win32     # UWP, Linux, MacOS, tvOS, iOS, Android, Emscripten
+      platform:           Win32     # UWP, Linux, MacOS, tvOS, iOS, Android, Web
       cmake-generator:    Ninja     # Optional
       ninja-vs-arch:      x64       # When Ninja is used for VS build
-      vulkan-sdk-version: 1.3.250.1 # Optional, see defaults below
+      vulkan-sdk-version: 1.3.290.0 # Optional, see defaults below
       java-version:       17        # Optional, see defaults below
-      emsdk-version:      3.1.9     # Optional, see defaults below
+      emsdk-version:      4.0.0     # Optional, see defaults below
 ```
 
 Default component versions are specified in the table below:
 
 |  Component      |      v1       |
 |-----------------|---------------|
-| Vulkan SDK      | 1.3.250.1     |
+| Vulkan SDK      | 1.3.290.0     |
 | Java            | 17            |
-| Emscripten  SDK | 3.1.9         |
+| Emscripten  SDK | 4.0.0         |
 
 
 Linux libraires:
