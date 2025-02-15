@@ -76,8 +76,10 @@ fi
 if [[ "$INPUT_MODE" == "vk_sw" ]]; then
     if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
         DYN_RENDERING_STATE_STR='DynamicRendering: Disabled'
+        HOST_IMAGE_COPY_STATE_STR='HostImageCopy: Disabled'
     else
         DYN_RENDERING_STATE_STR='DynamicRendering: Enabled'
+        HOST_IMAGE_COPY_STATE_STR='HostImageCopy: Enabled'
     fi
 
     if [[ "$TEST_LOG" == *"$DYN_RENDERING_STATE_STR"* ]]; then
@@ -86,6 +88,13 @@ if [[ "$INPUT_MODE" == "vk_sw" ]]; then
         echo "Verifying '$DYN_RENDERING_STATE_STR': FAIL"
         RES="FAIL"
     fi
+
+    if [[ "$TEST_LOG" == *"$HOST_IMAGE_COPY_STATE_STR"* ]]; then
+		echo "Verifying '$HOST_IMAGE_COPY_STATE_STR': OK"
+	else
+		echo "Verifying '$HOST_IMAGE_COPY_STATE_STR': FAIL"
+		RES="FAIL"
+	fi
 fi
 
 if [[ "$RES" != "OK" ]]; then

@@ -27,7 +27,7 @@ fi
 
 if [[ "$INPUT_MODE" == "vk_sw" ]]; then
     if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
-        GTEST_FILTER="DrawCommandTest*:ClearRenderTargetTest*:ComputeShaderTest*:FenceTest*:GenerateMipsTest*:GPUCompletionAwaitQueueTest*:ReadOnlyDepthTest*:RenderPassTest*"
+        GTEST_FILTER="DrawCommandTest*:ClearRenderTargetTest*:ComputeShaderTest*:FenceTest*:GenerateMipsTest*:GPUCompletionAwaitQueueTest*:ReadOnlyDepthTest*:RenderPassTest*:TextureCreation*"
     else
         GTEST_FILTER="-RayTracingTest/*compacted*:Sparse/*:SparseResourceTest*:DynamicTextureArray/*USAGE_SPARSE*:ArchiveTest.RayTracingPipeline_Async:MeshShaderTest.DrawTrisWithAmplificationShader:PipelineResourceSignatureTest.RunTimeResourceArray*:QueryTest.PipelineStats:QueryTest.Occlusion:QueryTest.BinaryOcclusion"
     fi
@@ -43,7 +43,7 @@ if [[ "$GTEST_FILTER" != "" ]]; then
 fi
 
 if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
-    BIN_PATH="$BIN_PATH --Features.DynamicRendering=Off"
+    BIN_PATH="$BIN_PATH --Features.DynamicRendering=Off --Features.HostImageCopy=Off"
 fi
 
 if [[ "$INPUT_NON_SEP_PROGS" == "true" ]]; then
