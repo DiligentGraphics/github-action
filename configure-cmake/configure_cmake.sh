@@ -39,6 +39,10 @@ if [[ "$VULKAN_SDK" != "" ]]; then
     CMAKE_CMD="$CMAKE_CMD -DVULKAN_SDK=\"$VULKAN_SDK\""
 fi
 
+if [[ "$DILIGENT_TARGET_PLATFORM" == "Win32" ]]; then
+    CMAKE_CMD="$CMAKE_CMD -DDILIGENT_BUILD_WIN32_GUI_AS_CONSOLE=ON"
+fi
+
 # Add iOS and tvOS - specific options
 if [[ "$DILIGENT_TARGET_PLATFORM" == "iOS" || "$DILIGENT_TARGET_PLATFORM" == "tvOS" ]]; then
     if [[ "$INPUT_OSX_DEPLOYMENT_TARGET" == "" ]]; then
