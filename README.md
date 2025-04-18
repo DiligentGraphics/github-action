@@ -200,3 +200,15 @@ Example:
   uses: DiligentGraphics/github-action/clean-disk-ubuntu@master
   preserve-android-ndk: 27.0.12077973
 ```
+
+
+## install-doxygen
+
+Installs Doxygen.
+
+Example:
+
+```yml
+- name: Install Doxygen
+  uses: DiligentGraphics/github-action/install-doxygen@master
+```
