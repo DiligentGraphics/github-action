@@ -94,6 +94,6 @@ runs:
 
     - name: Setup Emscripten SDK
       if: ${{ success() && inputs.platform == 'Web' }}
-      uses: mymindstorm/setup-emsdk@master
+      uses: emscripten-core/setup-emsdk@v16
       with:
         version: ${{ inputs.emsdk-version }}
