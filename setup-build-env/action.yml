@@ -61,10 +61,6 @@ runs:
         echo "DISPLAY=:99" >> $GITHUB_ENV
         # Note that it takes some time for Xvfb to start, but there are plenty of steps before it is used by tests
 
-    - name: Setup Ninja
-      if: ${{ success() && (contains(inputs.cmake-generator, 'Ninja') || inputs.platform == 'Web') }}
-      uses: seanmiddleditch/gha-setup-ninja@master
-
     - name: Setup VS Development Environment for Ninja
       if: ${{ success() && contains(inputs.cmake-generator, 'Ninja') && runner.os == 'Windows' }}
       uses: ilammy/msvc-dev-cmd@v1
