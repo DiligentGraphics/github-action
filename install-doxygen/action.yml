@@ -5,7 +5,7 @@ inputs:
   version:
     description: Doxygen version to install
     required: false
-    default: '1.13.2'
+    default: '1.17.0'
 
 runs:
   using: "composite" # must be set to "composite"
@@ -15,7 +15,7 @@ runs:
       run: |
         # Download and install Doxygen
         DOXYGEN_VERSION=${{ inputs.version }}
-        wget https://doxygen.nl/files/doxygen-$DOXYGEN_VERSION.linux.bin.tar.gz
+        wget https://www.doxygen.nl/files/doxygen-$DOXYGEN_VERSION.linux.bin.tar.gz
         tar -xzf doxygen-$DOXYGEN_VERSION.linux.bin.tar.gz
         sudo cp -r doxygen-$DOXYGEN_VERSION/bin/* /usr/local/bin/
         rm -rf doxygen-$DOXYGEN_VERSION*
