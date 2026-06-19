@@ -1,0 +1,41 @@
+name: "DiligentGraphics: Run Radient GPU Tests"
+description: "Run tests from the RadientGPUTest suite"
+
+inputs:
+  mode:
+    description: Graphics mode (d3d11_sw, d3d12_sw)
+    required: true
+   
+  args:
+    description: Optional extra arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run Radient GPU Tests
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS: ${{runner.os}}
+        INPUT_MODE:      ${{inputs.mode}}
+        INPUT_ARGS:      ${{inputs.args}}
+      shell: bash
+      run: |
+        # Diligent Radient GPU Tests
+        chmod +x "${{github.action_path}}/run_radient_gpu_tests.sh"
+        "${{github.action_path}}/run_radient_gpu_tests.sh"
+
+    - name: Verify Test Output
+      if: success()
+      env:
+        INPUT_MODE: ${{inputs.mode}}
+      shell: bash
+      run: |
+        # Verify Test Output
+        chmod +x "${{github.action_path}}/verify_test_output.sh"
+        EXIT_CODE=0
+        "${{github.action_path}}/verify_test_output.sh" || EXIT_CODE=$?
+        if [[ "$EXIT_CODE" != "0" ]]; then
+          echo "::error:: Radient GPU tests output verification failed! Please examine it to find mismatches."
+        fi
