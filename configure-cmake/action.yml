@@ -28,10 +28,10 @@ inputs:
     description: Additional CMake arguments
     required: false
 
-  enable-asan:
-    description: Enable AddressSanitizer
+  sanitizer:
+    description: Sanitizer to enable, for example 'address' or 'thread'
     required: false
-    default: 'false'
+    default: ''
 
   cc:
     description: c compiler
@@ -75,7 +75,7 @@ runs:
         INPUT_OSX_DEPLOYMENT_TARGET: "${{ inputs.osx-deployment-target }}"
         INPUT_OSX_ARCHITECTURES:     "${{ inputs.osx-architectures }}"
         INPUT_CMAKE_ARGS:            "${{ inputs.cmake-args }}"
-        INPUT_ENABLE_ASAN:           "${{ inputs.enable-asan }}"
+        INPUT_SANITIZER:             "${{ inputs.sanitizer }}"
         CMAKE_GENERATOR:             "${{ inputs.generator }}"
         BUILD_DIRECTORY:             "${{ inputs.build-directory }}"
         CC:                          "${{ inputs.cc }}"
@@ -91,9 +91,9 @@ runs:
     - name: Verify configuration
       if: ${{ success() }}
       env:
-        INPUT_GENERATOR:   "${{ inputs.generator }}"
-        INPUT_VS_ARCH:     "${{ inputs.vs-arch }}"
-        INPUT_ENABLE_ASAN: "${{ inputs.enable-asan }}"
+        INPUT_GENERATOR: "${{ inputs.generator }}"
+        INPUT_VS_ARCH:   "${{ inputs.vs-arch }}"
+        INPUT_SANITIZER: "${{ inputs.sanitizer }}"
 
       shell: bash
       run: |
@@ -103,4 +103,5 @@ runs:
         "${{github.action_path}}/verify_config.sh" || EXIT_CODE=$?
         if [[ "$EXIT_CODE" != "0" ]]; then
           echo "::error:: CMake configuration verification failed! Please examine CMake output to find mismatches."
+          exit "$EXIT_CODE"
         fi

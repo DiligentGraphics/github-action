@@ -72,8 +72,8 @@ if [[ "$INPUT_CMAKE_ARGS" != "" ]]; then
     CMAKE_CMD="$CMAKE_CMD $INPUT_CMAKE_ARGS"
 fi
 
-if [[ "$INPUT_ENABLE_ASAN" == "true" ]]; then
-    CMAKE_CMD="$CMAKE_CMD -DDILIGENT_ENABLE_ASAN=ON"
+if [[ "$INPUT_SANITIZER" != "" ]]; then
+    CMAKE_CMD="$CMAKE_CMD -DDILIGENT_SANITIZER=$INPUT_SANITIZER"
 fi
 
 # Add install prefix - use full path to the build folder, otherwise

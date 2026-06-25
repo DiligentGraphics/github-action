@@ -49,17 +49,18 @@ else
 fi
 
 
-ASAN_STR="DILIGENT_ENABLE_ASAN is ON"
-if [[ "$INPUT_ENABLE_ASAN" == "true" ]]; then
-    if [[ "$CMAKE_LOG" == *"$ASAN_STR"* ]]; then
-        echo "Verifying '$ASAN_STR': OK"
+if [[ "$INPUT_SANITIZER" != "" ]]; then
+    SANITIZER_STR="DILIGENT_SANITIZER is '$INPUT_SANITIZER'"
+    if [[ "$CMAKE_LOG" == *"$SANITIZER_STR"* ]]; then
+        echo "Verifying '$SANITIZER_STR': OK"
     else
-        echo "Verifying '$ASAN_STR': FAIL"
+        echo "Verifying '$SANITIZER_STR': FAIL"
         RES="FAIL"
     fi
 else
-    if [[ "$CMAKE_LOG" == *"$ASAN_STR"* ]]; then
-        echo "AddressSanitizer was not requested, but CMake reported '$ASAN_STR'"
+    SANITIZER_STR="DILIGENT_SANITIZER is '"
+    if [[ "$CMAKE_LOG" == *"$SANITIZER_STR"* ]]; then
+        echo "Sanitizer was not requested, but CMake output indicates that a sanitizer was enabled"
         RES="FAIL"
     fi
 fi
