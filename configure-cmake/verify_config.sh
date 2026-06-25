@@ -49,6 +49,22 @@ else
 fi
 
 
+ASAN_STR="DILIGENT_ENABLE_ASAN is ON"
+if [[ "$INPUT_ENABLE_ASAN" == "true" ]]; then
+    if [[ "$CMAKE_LOG" == *"$ASAN_STR"* ]]; then
+        echo "Verifying '$ASAN_STR': OK"
+    else
+        echo "Verifying '$ASAN_STR': FAIL"
+        RES="FAIL"
+    fi
+else
+    if [[ "$CMAKE_LOG" == *"$ASAN_STR"* ]]; then
+        echo "AddressSanitizer was not requested, but CMake reported '$ASAN_STR'"
+        RES="FAIL"
+    fi
+fi
+
+
 if [[ "$RES" != "OK" ]]; then
     echo "Captured CMake log:"
     echo "$CMAKE_LOG"

@@ -28,6 +28,11 @@ inputs:
     description: Additional CMake arguments
     required: false
 
+  enable-asan:
+    description: Enable AddressSanitizer
+    required: false
+    default: 'false'
+
   cc:
     description: c compiler
     required: false
@@ -70,6 +75,7 @@ runs:
         INPUT_OSX_DEPLOYMENT_TARGET: "${{ inputs.osx-deployment-target }}"
         INPUT_OSX_ARCHITECTURES:     "${{ inputs.osx-architectures }}"
         INPUT_CMAKE_ARGS:            "${{ inputs.cmake-args }}"
+        INPUT_ENABLE_ASAN:           "${{ inputs.enable-asan }}"
         CMAKE_GENERATOR:             "${{ inputs.generator }}"
         BUILD_DIRECTORY:             "${{ inputs.build-directory }}"
         CC:                          "${{ inputs.cc }}"
@@ -85,8 +91,9 @@ runs:
     - name: Verify configuration
       if: ${{ success() }}
       env:
-        INPUT_GENERATOR: "${{ inputs.generator }}"
-        INPUT_VS_ARCH:   "${{ inputs.vs-arch }}"
+        INPUT_GENERATOR:   "${{ inputs.generator }}"
+        INPUT_VS_ARCH:     "${{ inputs.vs-arch }}"
+        INPUT_ENABLE_ASAN: "${{ inputs.enable-asan }}"
 
       shell: bash
       run: |

@@ -72,6 +72,10 @@ if [[ "$INPUT_CMAKE_ARGS" != "" ]]; then
     CMAKE_CMD="$CMAKE_CMD $INPUT_CMAKE_ARGS"
 fi
 
+if [[ "$INPUT_ENABLE_ASAN" == "true" ]]; then
+    CMAKE_CMD="$CMAKE_CMD -DDILIGENT_ENABLE_ASAN=ON"
+fi
+
 # Add install prefix - use full path to the build folder, otherwise
 # it will be created in the current directory (which is the source folder)
 CMAKE_CMD="$CMAKE_CMD -DCMAKE_INSTALL_PREFIX=\"$BUILD_DIRECTORY/install\""
