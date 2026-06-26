@@ -1,6 +1,16 @@
 if [[ "$INPUT_IS_SUBMODULE" == "true" ]]; then
     cd DiligentCore
 fi
+
+if [[ "$INPUT_RUNNER_OS" == "Linux" && "${TSAN_OPTIONS:-}" != *"suppressions="* ]]; then
+    TSAN_SUPP="$PWD/BuildTools/Sanitizers/tsan.supp"
+    if [[ -f "$TSAN_SUPP" ]]; then
+        export TSAN_OPTIONS="${TSAN_OPTIONS:+$TSAN_OPTIONS:}suppressions=$TSAN_SUPP"
+    else
+        echo "::error:: TSAN suppression file was not found: $TSAN_SUPP"
+    fi
+fi
+
 cd Tests/DiligentCoreAPITest/assets
 
 BIN_PATH="$DILIGENT_BUILD_DIR"
