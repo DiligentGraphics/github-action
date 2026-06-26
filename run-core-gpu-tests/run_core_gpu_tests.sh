@@ -39,7 +39,7 @@ if [[ "$INPUT_MODE" == "vk_sw" ]]; then
     if [[ "$INPUT_VK_COMPAT" == "true" ]]; then
         GTEST_FILTER="DrawCommandTest*:ClearRenderTargetTest*:ComputeShaderTest*:FenceTest*:GenerateMipsTest*:GPUCompletionAwaitQueueTest*:ReadOnlyDepthTest*:RenderPassTest*:TextureCreation*"
     else
-        GTEST_FILTER="-RayTracingTest/*compacted*:Sparse/*:SparseResourceTest*:DynamicTextureArray/*USAGE_SPARSE*:ArchiveTest.RayTracingPipeline_Async:MeshShaderTest.DrawTrisWithAmplificationShader:PipelineResourceSignatureTest.RunTimeResourceArray*:QueryTest.PipelineStats:QueryTest.Occlusion:QueryTest.BinaryOcclusion"
+        GTEST_FILTER="-Sparse/*:SparseResourceTest*:DynamicTextureArray/*USAGE_SPARSE*:MeshShaderTest.DrawTrisWithAmplificationShader:PipelineResourceSignatureTest.RunTimeResourceArray*:QueryTest.PipelineStats"
     fi
 elif [[ "$INPUT_MODE" == "gl" ]]; then
     GTEST_FILTER="-DrawCommandTest.MultiDrawIndirectCount:DrawCommandTest.MultiDrawIndexedIndirectCount:DrawCommandTest.NativeMultiDrawIndexed"
