@@ -14,7 +14,7 @@ inputs:
   vulkan-sdk-version:
     description: Vulkan SDK version
     required: false
-    default: '1.4.335.0'
+    default: '1.4.350.0'
 
   java-version:
     description: Java version
