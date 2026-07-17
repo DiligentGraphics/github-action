@@ -2,6 +2,10 @@ if [[ "$INPUT_IS_SUBMODULE" == "true" ]]; then
     cd DiligentCore
 fi
 
+if [[ "$DILIGENT_SANITIZER" == "address" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/../common/setup_asan.sh" "$INPUT_MODE" || exit 1
+fi
+
 if [[ "$INPUT_RUNNER_OS" == "Linux" && "${TSAN_OPTIONS:-}" != *"suppressions="* ]]; then
     TSAN_SUPP="$PWD/BuildTools/Sanitizers/tsan.supp"
     if [[ -f "$TSAN_SUPP" ]]; then

@@ -1,3 +1,6 @@
+if [[ "$DILIGENT_SANITIZER" == "address" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/../common/setup_asan.sh" "$INPUT_MODE" || exit 1
+fi
 
 cd DiligentTools/Tests/DiligentToolsGPUTest/assets
 

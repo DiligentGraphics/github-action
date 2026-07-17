@@ -46,6 +46,9 @@ runs:
       shell: bash
       run: |
         # Sample Tests
+        if [[ "$DILIGENT_SANITIZER" == "address" ]]; then
+          source "${{github.action_path}}/../common/setup_asan.sh" "${{inputs.mode}}" || exit 1
+        fi
         args="--mode ${{inputs.mode}}"
         if [[ "${{inputs.non-separable-progs}}" == "true" ]]; then
           args="$args --non_separable_progs 1"
