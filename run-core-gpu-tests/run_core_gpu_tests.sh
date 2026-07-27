@@ -6,13 +6,8 @@ if [[ "$DILIGENT_SANITIZER" == "address" ]]; then
     source "$(dirname "${BASH_SOURCE[0]}")/../common/setup_asan.sh" "$INPUT_MODE" || exit 1
 fi
 
-if [[ "$INPUT_RUNNER_OS" == "Linux" && "${TSAN_OPTIONS:-}" != *"suppressions="* ]]; then
-    TSAN_SUPP="$PWD/BuildTools/Sanitizers/tsan.supp"
-    if [[ -f "$TSAN_SUPP" ]]; then
-        export TSAN_OPTIONS="${TSAN_OPTIONS:+$TSAN_OPTIONS:}suppressions=$TSAN_SUPP"
-    else
-        echo "::error:: TSAN suppression file was not found: $TSAN_SUPP"
-    fi
+if [[ "$DILIGENT_SANITIZER" == "thread" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/../common/setup_tsan.sh" "$PWD/BuildTools/Sanitizers/tsan.supp" || exit 1
 fi
 
 cd Tests/DiligentCoreAPITest/assets

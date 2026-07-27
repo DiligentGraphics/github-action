@@ -2,6 +2,10 @@ if [[ "$DILIGENT_SANITIZER" == "address" ]]; then
     source "$(dirname "${BASH_SOURCE[0]}")/../common/setup_asan.sh" "$INPUT_MODE" || exit 1
 fi
 
+if [[ "$DILIGENT_SANITIZER" == "thread" ]]; then
+    source "$(dirname "${BASH_SOURCE[0]}")/../common/setup_tsan.sh" "$PWD/DiligentCore/BuildTools/Sanitizers/tsan.supp" || exit 1
+fi
+
 cd DiligentFX/Tests/RadientGPUTest/assets
 
 BIN_PATH="$DILIGENT_BUILD_DIR/DiligentFX/Tests/RadientGPUTest"
