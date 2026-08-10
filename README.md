@@ -188,6 +188,22 @@ Example:
       non-separable-progs: false
 ```
 
+## run-radient-render-tests
+
+Runs Radient reference-image rendering tests.
+
+Example:
+
+```yml
+- name: Radient Render Tests D3D11
+  uses: DiligentGraphics/github-action/run-radient-render-tests@master
+  with:
+    mode:                 d3d11_sw
+    models-path:          ${{github.workspace}}/glTF-Sample-Assets
+    assets-path:          ${{github.workspace}}/RadientTestData
+    update-golden-images: true
+```
+
 
 ## clean-disk-ubuntu
 

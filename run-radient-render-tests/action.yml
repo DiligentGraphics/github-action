@@ -1,0 +1,55 @@
+name: "DiligentGraphics: Run Radient Render Tests"
+description: "Run reference-image tests from the RadientRenderTest suite"
+
+inputs:
+  mode:
+    description: Graphics mode (d3d11_sw, d3d12_sw, vk_sw, gl, wgpu)
+    required: true
+
+  models-path:
+    description: Path to the glTF sample assets repository
+    required: true
+
+  assets-path:
+    description: Path to Radient render-test assets and golden images
+    required: true
+
+  update-golden-images:
+    description: Whether to overwrite golden images after comparison
+    required: false
+    default: "false"
+
+  max-channel-error:
+    description: Maximum ignored per-channel difference
+    required: false
+    default: "2"
+
+  max-bad-pixel-ratio:
+    description: Maximum fraction of pixels allowed to exceed the channel-error threshold
+    required: false
+    default: "0.0001"
+
+  args:
+    description: Optional extra arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Run Radient Render Tests
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS:           ${{runner.os}}
+        INPUT_MODE:                ${{inputs.mode}}
+        INPUT_MODELS_PATH:         ${{inputs.models-path}}
+        INPUT_ASSETS_PATH:         ${{inputs.assets-path}}
+        INPUT_UPDATE_GOLDEN_IMAGES: ${{inputs.update-golden-images}}
+        INPUT_MAX_CHANNEL_ERROR:    ${{inputs.max-channel-error}}
+        INPUT_MAX_BAD_PIXEL_RATIO:  ${{inputs.max-bad-pixel-ratio}}
+        INPUT_ARGS:                ${{inputs.args}}
+      shell: bash
+      run: |
+        # Diligent Radient Render Tests
+        chmod +x "${{github.action_path}}/run_radient_render_tests.sh"
+        "${{github.action_path}}/run_radient_render_tests.sh"
