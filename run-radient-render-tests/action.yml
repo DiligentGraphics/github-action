@@ -53,3 +53,18 @@ runs:
         # Diligent Radient Render Tests
         chmod +x "${{github.action_path}}/run_radient_render_tests.sh"
         "${{github.action_path}}/run_radient_render_tests.sh"
+
+    - name: Verify Test Output
+      if: success()
+      env:
+        INPUT_MODE: ${{inputs.mode}}
+      shell: bash
+      run: |
+        # Verify Test Output
+        EXIT_CODE=0
+        chmod +x "${{github.action_path}}/../common/verify_test_mode.sh"
+        "${{github.action_path}}/../common/verify_test_mode.sh" "$GITHUB_WORKSPACE/RadientRenderTest-$INPUT_MODE.log" "$INPUT_MODE" || EXIT_CODE=$?
+        if [[ "$EXIT_CODE" != "0" ]]; then
+          echo "::error:: Radient render tests output verification failed! Please examine it to find mismatches."
+          exit "$EXIT_CODE"
+        fi
