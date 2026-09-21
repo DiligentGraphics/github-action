@@ -173,6 +173,28 @@ Example:
     mode:    d3d11_sw
 ```
 
+## run-fx-gpu-tests
+
+Runs the `DiligentFXGPUTest` suite for the current configuration. Build with
+`DILIGENT_BUILD_FX_TESTS=ON` before running this action. Tests run from
+`DiligentFX/Tests/DiligentFXGPUTest/assets`.
+
+The required `mode` input selects the graphics backend; the optional `args` input
+passes additional test arguments. Like the other GPU test actions, it captures
+output in `TestOutput.log` and verifies the requested backend was used.
+
+Example:
+
+```yml
+- name: DiligentFXGPUTest D3D11
+  if:   success()
+  uses: DiligentGraphics/github-action/run-fx-gpu-tests@master
+  with:
+    mode: d3d11_sw
+    args: --gtest_filter=*AtlasSamplingTest*
+```
+
+
 ## run-sample-tests
 
 Runs sample and tutorial tests for the current configuration.

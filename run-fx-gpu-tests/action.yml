@@ -1,0 +1,42 @@
+name: "DiligentGraphics: Run Diligent FX GPU Tests"
+description: "Run tests from the DiligentFXGPUTest suite"
+
+inputs:
+  mode:
+    description: Graphics mode (d3d11, d3d12, d3d11_sw, d3d12_sw, gl, vk, vk_sw, wgpu)
+    required: true
+
+  args:
+    description: Optional extra arguments to pass to the test
+    required: false
+
+runs:
+  using: "composite" # must be set to "composite"
+
+  steps:
+    - name: Run Diligent FX GPU Tests
+      working-directory: ${{github.workspace}}
+      env:
+        INPUT_RUNNER_OS: ${{runner.os}}
+        INPUT_MODE:      ${{inputs.mode}}
+        INPUT_ARGS:      ${{inputs.args}}
+      shell: bash
+      run: |
+        # Diligent FX GPU Tests
+        chmod +x "${{github.action_path}}/run_fx_gpu_tests.sh"
+        "${{github.action_path}}/run_fx_gpu_tests.sh"
+
+    - name: Verify Test Output
+      if: success()
+      env:
+        INPUT_MODE: ${{inputs.mode}}
+      shell: bash
+      run: |
+        # Verify Test Output
+        EXIT_CODE=0
+        chmod +x "${{github.action_path}}/../common/verify_test_mode.sh"
+        "${{github.action_path}}/../common/verify_test_mode.sh" "$GITHUB_WORKSPACE/TestOutput.log" "$INPUT_MODE" || EXIT_CODE=$?
+        if [[ "$EXIT_CODE" != "0" ]]; then
+          echo "::error:: Diligent FX GPU tests output verification failed! Please examine it to find mismatches."
+          exit "$EXIT_CODE"
+        fi
