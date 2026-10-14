@@ -24,7 +24,7 @@ inputs:
   emsdk-version:
     description: Emscripten SDK version
     required: false
-    default: '4.0.0'
+    default: '6.0.11'
 
   cmake-generator:
     description: CMake generator

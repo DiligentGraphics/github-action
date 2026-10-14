@@ -32,23 +32,23 @@ Example:
 ```yml
 steps:
 - name: Set up build environment
-    uses: DiligentGraphics/github-action/setup-build-env@v1
+    uses: DiligentGraphics/github-action/setup-build-env@v28
     with:
       platform:           Win32     # UWP, Linux, MacOS, tvOS, iOS, Android, Web
       cmake-generator:    Ninja     # Optional
       ninja-vs-arch:      x64       # When Ninja is used for VS build
-      vulkan-sdk-version: 1.3.290.0 # Optional, see defaults below
+      vulkan-sdk-version: 1.4.363.0 # Optional, see defaults below
       java-version:       17        # Optional, see defaults below
-      emsdk-version:      4.0.0     # Optional, see defaults below
+      emsdk-version:      6.0.11    # Optional, see defaults below
 ```
 
 Default component versions are specified in the table below:
 
-|  Component      |      v1       |
+|  Component      |      v28      |
 |-----------------|---------------|
-| Vulkan SDK      | 1.3.290.0     |
+| Vulkan SDK      | 1.4.363.0     |
 | Java            | 17            |
-| Emscripten  SDK | 4.0.0         |
+| Emscripten SDK  | 6.0.11        |
 
 
 Linux libraires:
