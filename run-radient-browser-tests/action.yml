@@ -1,0 +1,52 @@
+name: "DiligentGraphics: Run Radient Browser Tests"
+description: "Run Radient JavaScript and golden-image tests in Chrome with SwiftShader"
+
+inputs:
+  build-dir:
+    description: DiligentFX build directory (defaults to DILIGENT_BUILD_DIR/DiligentFX)
+    required: false
+  configuration:
+    description: Build configuration (defaults to DILIGENT_BUILD_TYPE)
+    required: false
+  models-path:
+    description: Path to the glTF sample assets repository
+    required: true
+  assets-path:
+    description: Path to Radient test assets and golden images
+    required: true
+  browser:
+    description: Chrome/Chromium executable (discovered from PATH by default)
+    required: false
+  filter:
+    description: Optional CTest test-name regular expression within the Browser label
+    required: false
+  output-dir:
+    description: Directory for test logs, JUnit XML, and rendered images
+    default: BrowserRenderResults
+  artifact-name:
+    description: Name of the uploaded results artifact; use a unique name for each matrix job
+    default: RadientBrowserTests
+
+runs:
+  using: composite
+  steps:
+    - name: Run Radient browser tests
+      working-directory: ${{github.workspace}}
+      shell: bash
+      env:
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_CONFIGURATION: ${{inputs.configuration}}
+        INPUT_MODELS_PATH: ${{inputs.models-path}}
+        INPUT_ASSETS_PATH: ${{inputs.assets-path}}
+        DILIGENT_BROWSER_EXECUTABLE: ${{inputs.browser}}
+        INPUT_FILTER: ${{inputs.filter}}
+        INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
+      run: bash "${{github.action_path}}/run_radient_browser_tests.sh"
+
+    - name: Upload Radient browser test results
+      if: ${{always()}}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}
+        path: ${{inputs.output-dir}}
+        if-no-files-found: warn

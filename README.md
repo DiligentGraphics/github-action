@@ -250,3 +250,53 @@ Example:
 - name: Install Doxygen
   uses: DiligentGraphics/github-action/install-doxygen@master
 ```
+
+
+## run-core-browser-tests
+
+Runs the already-built `DiligentCoreAPITest` Wasm module in headless
+Chrome/SwiftShader on Linux. Python 3 and Chrome/Chromium must be installed.
+The action uses the Core checkout's browser runner and `exclude.txt`; changing
+test exclusions does not require updating the action. Logs and Google Test XML
+are uploaded even if the tests fail.
+
+```yml
+- name: Test Core in Chrome
+  uses: DiligentGraphics/github-action/run-core-browser-tests@v29
+  with:
+    artifact-name: CoreBrowserTests-${{matrix.build_type}}
+```
+
+For an engine checkout, specify `source-dir: DiligentCore` and
+`build-dir: ${{env.DILIGENT_BUILD_DIR}}/DiligentCore`. The defaults are `.` and
+`DILIGENT_BUILD_DIR`, respectively. Optional inputs are `browser` (executable),
+`filter` (Google Test pattern), and `output-dir` (default `BrowserTestResults`).
+Use a unique `artifact-name` for each job in a build matrix.
+
+## run-radient-browser-tests
+
+Runs the already-built Radient browser binding suites and golden-image tests
+through CTest in headless Chrome/SwiftShader on Linux. The test list, render
+manifest, timeouts, and image-comparison tolerances remain in DiligentFX.
+The action uploads the verbose CTest log, JUnit XML, render reports, and images,
+including after a test failure. It does not build tests or download assets.
+
+```yml
+- name: Test Radient in Chrome
+  uses: DiligentGraphics/github-action/run-radient-browser-tests@v29
+  with:
+    models-path: ${{github.workspace}}/glTF-Sample-Assets
+    assets-path: ${{github.workspace}}/DiligentTestData
+    artifact-name: RadientBrowserTests-${{matrix.build_type}}
+```
+
+`build-dir` defaults to `DILIGENT_BUILD_DIR/DiligentFX`; `configuration` defaults
+to `DILIGENT_BUILD_TYPE`. Optional inputs are `browser` (executable), `filter`
+(CTest test-name regular expression within the `Browser` label), and
+`output-dir` (default `BrowserRenderResults`). Relative paths are resolved from
+the workflow workspace. The assets checkout must contain the Chrome reference
+images used by the module's render tests.
+
+Both actions use `common/chrome_swiftshader.sh` for browser discovery and software
+rendering flags. Their module-specific harnesses manage browser sessions and
+report failures. Build and asset-checkout steps remain in the calling workflow.
