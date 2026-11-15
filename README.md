@@ -255,8 +255,8 @@ Example:
 ## run-core-cpu-browser-tests
 
 Runs the already-built `DiligentCoreTest` CPU suite in one headless Chrome
-session on Linux. Python 3 and Chrome/Chromium with JSPI support must be
-installed. No GPU or software graphics adapter is required. Each test's output
+session on Linux, Windows, and macOS. Python 3 and Chrome/Chromium with JSPI
+support must be installed. No GPU or software graphics adapter is required. Each test's output
 is streamed to the workflow log; test logs and Google Test XML are uploaded
 even after a failure.
 
@@ -272,16 +272,16 @@ in DiligentCore; this action only runs the tests.
 ## run-core-browser-tests
 
 Runs the already-built `DiligentCoreAPITest` Wasm module in headless
-Chrome/SwiftShader on Linux. Python 3 and Chrome/Chromium must be installed.
-The action uses the Core checkout's browser runner and `exclude.txt`; changing
+Chrome/SwiftShader on Linux and Windows. Python 3 and Chrome/Chromium must be
+installed. The action uses the Core checkout's browser runner and `exclude.txt`; changing
 test exclusions does not require updating the action. Logs and Google Test XML
 are uploaded even if the tests fail.
 
 ```yml
 - name: Test Core in Chrome
-  uses: DiligentGraphics/github-action/run-core-browser-tests@v29
+  uses: DiligentGraphics/github-action/run-core-browser-tests@v33
   with:
-    artifact-name: CoreBrowserTests-${{matrix.build_type}}
+    artifact-name: CoreBrowserTests-${{runner.os}}-${{matrix.build_type}}
 ```
 
 For an engine checkout, specify `source-dir: DiligentCore` and
@@ -293,21 +293,22 @@ Use a unique `artifact-name` for each job in a build matrix.
 ## run-tools-cpu-browser-tests and run-tools-gpu-browser-tests
 
 Run the already-built `DiligentToolsTest` and `DiligentToolsGPUTest` suites in
-headless Chrome on Linux. The GPU action selects SwiftShader; the CPU action
-does not require a graphics adapter. Both stream per-test output to the workflow
+headless Chrome. CPU tests support Linux, Windows, and macOS; GPU tests support
+Linux and Windows. The GPU action selects SwiftShader; the CPU action does not
+require a graphics adapter. Both stream per-test output to the workflow
 log and upload `tests.log`, `chrome.log`, and Google Test XML, including after
 failure. Python 3 and Chrome/Chromium with JSPI support must be installed.
 
 ```yml
 - name: Test Tools CPU in Chrome
-  uses: DiligentGraphics/github-action/run-tools-cpu-browser-tests@v32
+  uses: DiligentGraphics/github-action/run-tools-cpu-browser-tests@v33
   with:
-    artifact-name: ToolsCPU-Chrome-${{matrix.build_type}}
+    artifact-name: ToolsCPU-Chrome-${{runner.os}}-${{matrix.build_type}}
 
 - name: Test Tools WebGPU in Chrome
-  uses: DiligentGraphics/github-action/run-tools-gpu-browser-tests@v32
+  uses: DiligentGraphics/github-action/run-tools-gpu-browser-tests@v33
   with:
-    artifact-name: ToolsWebGPU-Chrome-${{matrix.build_type}}
+    artifact-name: ToolsWebGPU-Chrome-${{runner.os}}-${{matrix.build_type}}
 ```
 
 `source-dir` defaults to `DiligentTools` and `build-dir` to
@@ -343,6 +344,9 @@ to `DILIGENT_BUILD_TYPE`. Optional inputs are `browser` (executable), `filter`
 the workflow workspace. The assets checkout must contain the Chrome reference
 images used by the module's render tests.
 
-The GPU and Radient actions use `common/chrome_swiftshader.sh` for browser discovery and software
-rendering flags. Their module-specific harnesses manage browser sessions and
-report failures. Build and asset-checkout steps remain in the calling workflow.
+Core and Tools actions use `common/run_cpp_browser_tests.sh` to select Python and
+software rendering flags for the host platform. Their shared Core harness discovers
+Chrome on `PATH` or in standard Windows/macOS installation directories. On Windows,
+ANGLE uses D3D11 WARP and WebGPU uses SwiftShader, so no hardware GPU is required.
+The Linux Radient action uses `common/chrome_swiftshader.sh`.
+Their module-specific harnesses manage browser sessions and report failures. Build and asset-checkout steps remain in the calling workflow.

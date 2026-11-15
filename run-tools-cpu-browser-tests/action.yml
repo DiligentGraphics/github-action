@@ -9,7 +9,7 @@ inputs:
     description: DiligentTools build directory (defaults to DILIGENT_BUILD_DIR/DiligentTools)
     required: false
   browser:
-    description: Chrome/Chromium executable (discovered from PATH by default)
+    description: Chrome/Chromium executable (discovered from PATH or standard install locations)
     required: false
   filter:
     description: Google Test filter, combined with the module's browser exclusion list
