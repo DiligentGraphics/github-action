@@ -1,0 +1,44 @@
+name: "DiligentGraphics: Run Core CPU Browser Tests"
+description: "Run DiligentCoreTest in Chrome"
+
+inputs:
+  source-dir:
+    description: DiligentCore source directory
+    default: "."
+  build-dir:
+    description: DiligentCore build directory (defaults to DILIGENT_BUILD_DIR)
+    required: false
+  browser:
+    description: Chrome/Chromium executable (discovered from PATH by default)
+    required: false
+  filter:
+    description: Google Test filter, combined with the module's browser exclusion list
+    default: "*"
+  output-dir:
+    description: Directory for test logs and Google Test XML
+    default: CoreCPUBrowserTestResults
+  artifact-name:
+    description: Name of the uploaded results artifact; use a unique name for each matrix job
+    default: CoreCPUBrowserTests
+
+runs:
+  using: composite
+  steps:
+    - name: Run Core CPU browser tests
+      working-directory: ${{github.workspace}}
+      shell: bash
+      env:
+        INPUT_SOURCE_DIR: ${{inputs.source-dir}}
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_BROWSER: ${{inputs.browser}}
+        INPUT_FILTER: ${{inputs.filter}}
+        INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
+      run: bash "${{github.action_path}}/run_core_cpu_browser_tests.sh"
+
+    - name: Upload Core CPU browser test results
+      if: ${{always()}}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}
+        path: ${{inputs.output-dir}}
+        if-no-files-found: warn

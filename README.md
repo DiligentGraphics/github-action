@@ -252,6 +252,23 @@ Example:
 ```
 
 
+## run-core-cpu-browser-tests
+
+Runs the already-built `DiligentCoreTest` CPU suite in one headless Chrome
+session on Linux. Python 3 and Chrome/Chromium with JSPI support must be
+installed. No GPU or software graphics adapter is required. Each test's output
+is streamed to the workflow log; test logs and Google Test XML are uploaded
+even after a failure.
+
+`source-dir` defaults to `.` and `build-dir` to `DILIGENT_BUILD_DIR`. For an
+engine checkout, use `source-dir: DiligentCore` and
+`build-dir: ${{env.DILIGENT_BUILD_DIR}}/DiligentCore`. Optional inputs are
+`browser`, `filter` (Google Test pattern), `output-dir` (default
+`CoreCPUBrowserTestResults`), and `artifact-name` (default `CoreCPUBrowserTests`).
+Use a unique artifact name for each matrix job. Build settings and test
+configuration, including exception-test exclusions in `exclude.txt`, remain
+in DiligentCore; this action only runs the tests.
+
 ## run-core-browser-tests
 
 Runs the already-built `DiligentCoreAPITest` Wasm module in headless
@@ -297,6 +314,6 @@ to `DILIGENT_BUILD_TYPE`. Optional inputs are `browser` (executable), `filter`
 the workflow workspace. The assets checkout must contain the Chrome reference
 images used by the module's render tests.
 
-Both actions use `common/chrome_swiftshader.sh` for browser discovery and software
+The GPU and Radient actions use `common/chrome_swiftshader.sh` for browser discovery and software
 rendering flags. Their module-specific harnesses manage browser sessions and
 report failures. Build and asset-checkout steps remain in the calling workflow.
