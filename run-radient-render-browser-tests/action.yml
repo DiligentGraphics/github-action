@@ -1,4 +1,4 @@
-name: "DiligentGraphics: Run Radient Browser Tests"
+name: "DiligentGraphics: Run Radient Render Browser Tests"
 description: "Run Radient JavaScript and golden-image tests in Chrome with SwiftShader"
 
 inputs:
@@ -30,7 +30,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Run Radient browser tests
+    - name: Run Radient render browser tests
       working-directory: ${{github.workspace}}
       shell: bash
       env:
@@ -41,9 +41,9 @@ runs:
         DILIGENT_BROWSER_EXECUTABLE: ${{inputs.browser}}
         INPUT_FILTER: ${{inputs.filter}}
         INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
-      run: bash "${{github.action_path}}/run_radient_browser_tests.sh"
+      run: bash "${{github.action_path}}/run_radient_render_browser_tests.sh"
 
-    - name: Upload Radient browser test results
+    - name: Upload Radient render browser test results
       if: ${{always()}}
       uses: actions/upload-artifact@v7
       with:

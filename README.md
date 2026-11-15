@@ -323,8 +323,9 @@ in the calling workflow.
 ## run-radient-cpu-browser-tests and run-radient-gpu-browser-tests
 
 Run the already-built `RadientTest` and `RadientGPUTest` suites in headless Chrome
-on Linux and Windows. CPU tests need no graphics adapter; GPU tests use WebGPU
-with SwiftShader. Both reuse Core's browser harness, stream each test's output,
+on Linux and Windows, with CPU tests also supported on macOS. CPU tests need no
+graphics adapter; GPU tests use WebGPU with SwiftShader. Both reuse Core's browser
+harness, stream each test's output,
 and upload logs and Google Test XML even after a failure.
 
 ```yml
@@ -346,9 +347,9 @@ these actions. Python 3 and Chrome/Chromium with JSPI support are required.
 `output-dir`, and `artifact-name`. Results default to `RadientCPUBrowserTestResults`
 and `RadientGPUBrowserTestResults`. Test configuration, including `exclude.txt`,
 stays in FX. These native suites complement the JavaScript binding and golden-image
-tests run by `run-radient-browser-tests`.
+tests run by `run-radient-render-browser-tests`.
 
-## run-radient-browser-tests
+## run-radient-render-browser-tests
 
 Runs the already-built Radient browser binding suites and golden-image tests
 through CTest in headless Chrome/SwiftShader on Linux. The test list, render
@@ -358,7 +359,7 @@ including after a test failure. It does not build tests or download assets.
 
 ```yml
 - name: Test Radient in Chrome
-  uses: DiligentGraphics/github-action/run-radient-browser-tests@v29
+  uses: DiligentGraphics/github-action/run-radient-render-browser-tests@v34
   with:
     models-path: ${{github.workspace}}/glTF-Sample-Assets
     assets-path: ${{github.workspace}}/DiligentTestData
