@@ -349,6 +349,32 @@ and `RadientGPUBrowserTestResults`. Test configuration, including `exclude.txt`,
 stays in FX. These native suites complement the JavaScript binding and golden-image
 tests run by `run-radient-render-browser-tests`.
 
+## run-sample-browser-tests
+
+Runs the existing sample/tutorial executables in one headless Chrome process on
+Linux with SwiftShader. Each sample runs in its own tab. The native sample code
+captures the swap-chain image, compares it with the reference, and encodes a PNG.
+The action streams per-sample logs and uploads captured PNGs, JSON results, JUnit
+XML, and Chrome diagnostics, including after failure.
+
+```yml
+- name: Test sample captures in Chrome
+  uses: DiligentGraphics/github-action/run-sample-browser-tests@v35
+  with:
+    artifact-name: SamplesChrome-WebGPU-${{matrix.build_type}}
+```
+
+Build the samples normally with Emscripten before calling the action. Tests use
+the same artifacts as the website; no separate test build configuration is needed.
+The action expects `DiligentSamples` sources, build outputs under
+`DILIGENT_BUILD_DIR/DiligentSamples`, and reference PNGs under
+`DiligentTestData/GoldenImages/Chrome` (the `master` branch). Override these paths
+with `source-dir`, `build-dir`, and `reference-directory`. Optional inputs include
+`browser`, `mode` (default `wgpu`), `filter` (sample path glob), `output-dir`, and
+`artifact-name`. The manifest, known-failure exclusions, and tolerance remain in
+DiligentSamples. Reference generation is an explicit module-runner operation;
+this action only compares images.
+
 ## run-radient-render-browser-tests
 
 Runs the already-built Radient browser binding suites and golden-image tests
@@ -377,5 +403,5 @@ Core, Tools, and Radient CPU/GPU actions use `common/run_browser_tests.sh` to se
 software rendering flags for the host platform. Their shared Core harness discovers
 Chrome on `PATH` or in standard Windows/macOS installation directories. On Windows,
 ANGLE uses D3D11 WARP and WebGPU uses SwiftShader, so no hardware GPU is required.
-The Linux Radient JavaScript action uses `common/chrome_swiftshader.sh`.
+The Linux Samples and Radient JavaScript actions use `common/chrome_swiftshader.sh`.
 Their module-specific harnesses manage browser sessions and report failures. Build and asset-checkout steps remain in the calling workflow.

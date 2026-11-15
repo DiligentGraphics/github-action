@@ -1,0 +1,52 @@
+name: "DiligentGraphics: Run Sample Browser Tests"
+description: "Compare sample and tutorial captures in Chrome with SwiftShader"
+
+inputs:
+  source-dir:
+    description: DiligentSamples source directory
+    default: DiligentSamples
+  build-dir:
+    description: DiligentSamples build directory (defaults to DILIGENT_BUILD_DIR/DiligentSamples)
+    required: false
+  reference-directory:
+    description: Chrome golden-image directory from DiligentTestData master
+    default: DiligentTestData/GoldenImages/Chrome
+  browser:
+    description: Chrome/Chromium executable (discovered from PATH by default)
+    required: false
+  mode:
+    description: Browser graphics API (wgpu or webgl)
+    default: wgpu
+  filter:
+    description: Sample path glob
+    default: "*"
+  output-dir:
+    description: Captured PNGs, logs, JSON report, and JUnit XML
+    default: SamplesBrowserResults
+  artifact-name:
+    description: Uploaded artifact name; use a unique name for each matrix job
+    default: SamplesBrowserResults
+
+runs:
+  using: composite
+  steps:
+    - name: Compare sample browser captures
+      working-directory: ${{github.workspace}}
+      shell: bash
+      env:
+        INPUT_SOURCE_DIR: ${{inputs.source-dir}}
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_REFERENCE_DIRECTORY: ${{inputs.reference-directory}}
+        DILIGENT_BROWSER_EXECUTABLE: ${{inputs.browser}}
+        INPUT_MODE: ${{inputs.mode}}
+        INPUT_FILTER: ${{inputs.filter}}
+        INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
+      run: bash "${{github.action_path}}/run_sample_browser_tests.sh"
+
+    - name: Upload sample browser test results
+      if: ${{always()}}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}
+        path: ${{inputs.output-dir}}
+        if-no-files-found: warn
