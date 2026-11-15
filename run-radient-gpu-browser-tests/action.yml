@@ -1,0 +1,44 @@
+name: "DiligentGraphics: Run Radient GPU Browser Tests"
+description: "Run RadientGPUTest in Chrome with SwiftShader"
+
+inputs:
+  source-dir:
+    description: DiligentFX source directory
+    default: DiligentFX
+  build-dir:
+    description: DiligentFX build directory (defaults to DILIGENT_BUILD_DIR/DiligentFX)
+    required: false
+  browser:
+    description: Chrome/Chromium executable (discovered from PATH or standard install locations)
+    required: false
+  filter:
+    description: Google Test filter, combined with the module's browser exclusion list
+    default: "*"
+  output-dir:
+    description: Directory for test logs and Google Test XML
+    default: RadientGPUBrowserTestResults
+  artifact-name:
+    description: Name of the uploaded results artifact; use a unique name for each matrix job
+    default: RadientGPUBrowserTests
+
+runs:
+  using: composite
+  steps:
+    - name: Run Radient GPU browser tests
+      working-directory: ${{github.workspace}}
+      shell: bash
+      env:
+        INPUT_SOURCE_DIR: ${{inputs.source-dir}}
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_BROWSER: ${{inputs.browser}}
+        INPUT_FILTER: ${{inputs.filter}}
+        INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
+      run: bash "${{github.action_path}}/run_radient_gpu_browser_tests.sh"
+
+    - name: Upload Radient GPU browser test results
+      if: ${{always()}}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}
+        path: ${{inputs.output-dir}}
+        if-no-files-found: warn

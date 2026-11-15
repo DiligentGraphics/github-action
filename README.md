@@ -320,6 +320,34 @@ The actions reuse Core's browser harness through the Tools entry points.
 Each suite's `exclude.txt` and assets remain in DiligentTools. Build steps remain
 in the calling workflow.
 
+## run-radient-cpu-browser-tests and run-radient-gpu-browser-tests
+
+Run the already-built `RadientTest` and `RadientGPUTest` suites in headless Chrome
+on Linux and Windows. CPU tests need no graphics adapter; GPU tests use WebGPU
+with SwiftShader. Both reuse Core's browser harness, stream each test's output,
+and upload logs and Google Test XML even after a failure.
+
+```yml
+- name: Test Radient CPU in Chrome
+  uses: DiligentGraphics/github-action/run-radient-cpu-browser-tests@v34
+  with:
+    artifact-name: RadientCPU-Chrome-${{runner.os}}-${{matrix.build_type}}
+
+- name: Test Radient WebGPU in Chrome
+  uses: DiligentGraphics/github-action/run-radient-gpu-browser-tests@v34
+  with:
+    artifact-name: RadientWebGPU-Chrome-${{runner.os}}-${{matrix.build_type}}
+```
+
+Configure with `DILIGENT_BUILD_FX_TESTS=ON` and build the suites before running
+these actions. Python 3 and Chrome/Chromium with JSPI support are required.
+`source-dir` defaults to `DiligentFX`, and `build-dir` to
+`DILIGENT_BUILD_DIR/DiligentFX`. Optional inputs are `browser`, `filter`,
+`output-dir`, and `artifact-name`. Results default to `RadientCPUBrowserTestResults`
+and `RadientGPUBrowserTestResults`. Test configuration, including `exclude.txt`,
+stays in FX. These native suites complement the JavaScript binding and golden-image
+tests run by `run-radient-browser-tests`.
+
 ## run-radient-browser-tests
 
 Runs the already-built Radient browser binding suites and golden-image tests
@@ -344,9 +372,9 @@ to `DILIGENT_BUILD_TYPE`. Optional inputs are `browser` (executable), `filter`
 the workflow workspace. The assets checkout must contain the Chrome reference
 images used by the module's render tests.
 
-Core and Tools actions use `common/run_cpp_browser_tests.sh` to select Python and
+Core, Tools, and Radient CPU/GPU actions use `common/run_browser_tests.sh` to select Python and
 software rendering flags for the host platform. Their shared Core harness discovers
 Chrome on `PATH` or in standard Windows/macOS installation directories. On Windows,
 ANGLE uses D3D11 WARP and WebGPU uses SwiftShader, so no hardware GPU is required.
-The Linux Radient action uses `common/chrome_swiftshader.sh`.
+The Linux Radient JavaScript action uses `common/chrome_swiftshader.sh`.
 Their module-specific harnesses manage browser sessions and report failures. Build and asset-checkout steps remain in the calling workflow.
