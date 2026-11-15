@@ -39,7 +39,7 @@ steps:
       ninja-vs-arch:      x64       # When Ninja is used for VS build
       vulkan-sdk-version: 1.4.363.0 # Optional, see defaults below
       java-version:       17        # Optional, see defaults below
-      emsdk-version:      6.0.11    # Optional, see defaults below
+      emsdk-version:      7.0.0     # Optional, see defaults below
 ```
 
 Default component versions are specified in the table below:
@@ -48,7 +48,7 @@ Default component versions are specified in the table below:
 |-----------------|---------------|
 | Vulkan SDK      | 1.4.363.0     |
 | Java            | 17            |
-| Emscripten SDK  | 6.0.11        |
+| Emscripten SDK  | 7.0.0         |
 
 
 Linux libraires:
