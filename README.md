@@ -290,6 +290,35 @@ For an engine checkout, specify `source-dir: DiligentCore` and
 `filter` (Google Test pattern), and `output-dir` (default `BrowserTestResults`).
 Use a unique `artifact-name` for each job in a build matrix.
 
+## run-tools-cpu-browser-tests and run-tools-gpu-browser-tests
+
+Run the already-built `DiligentToolsTest` and `DiligentToolsGPUTest` suites in
+headless Chrome on Linux. The GPU action selects SwiftShader; the CPU action
+does not require a graphics adapter. Both stream per-test output to the workflow
+log and upload `tests.log`, `chrome.log`, and Google Test XML, including after
+failure. Python 3 and Chrome/Chromium with JSPI support must be installed.
+
+```yml
+- name: Test Tools CPU in Chrome
+  uses: DiligentGraphics/github-action/run-tools-cpu-browser-tests@v32
+  with:
+    artifact-name: ToolsCPU-Chrome-${{matrix.build_type}}
+
+- name: Test Tools WebGPU in Chrome
+  uses: DiligentGraphics/github-action/run-tools-gpu-browser-tests@v32
+  with:
+    artifact-name: ToolsWebGPU-Chrome-${{matrix.build_type}}
+```
+
+`source-dir` defaults to `DiligentTools` and `build-dir` to
+`DILIGENT_BUILD_DIR/DiligentTools`, matching both Tools CI and an engine checkout.
+Optional inputs are `browser`, `filter` (Google Test pattern), `output-dir`, and
+`artifact-name`. CPU results default to `ToolsCPUBrowserTestResults`; GPU results
+default to `ToolsGPUBrowserTestResults`. Use unique artifact names for matrix jobs.
+The actions reuse Core's browser harness through the Tools entry points.
+Each suite's `exclude.txt` and assets remain in DiligentTools. Build steps remain
+in the calling workflow.
+
 ## run-radient-browser-tests
 
 Runs the already-built Radient browser binding suites and golden-image tests
