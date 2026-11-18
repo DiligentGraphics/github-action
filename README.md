@@ -405,3 +405,50 @@ Chrome on `PATH` or in standard Windows/macOS installation directories. On Windo
 ANGLE uses D3D11 WARP and WebGPU uses SwiftShader, so no hardware GPU is required.
 The Linux Samples and Radient JavaScript actions use `common/chrome_swiftshader.sh`.
 Their module-specific harnesses manage browser sessions and report failures. Build and asset-checkout steps remain in the calling workflow.
+
+## setup-java-binding-tests and run-java-binding-tests
+
+Build and run generic Java/JNI marshalling tests and real Radient Java integration
+on Linux. The setup action reuses the runner's LLVM 22, Python 3, Ninja, and JDK
+(preferably `JAVA_HOME_21_X64`), installs FX's pinned Python requirements in a venv,
+and builds the generic fixtures. It exports `JAVA_HOME`,
+`DILIGENT_JAVA_TEST_BUILD_DIR`, and `RADIENT_JAVA_CMAKE_ARGS` for later steps.
+
+Pass `RADIENT_JAVA_CMAKE_ARGS` to the main CMake configuration. That build produces
+Radient, its JNI library, and the integration-test classes together. The test
+action only runs CTest: both suites print every case to the CI console, and the
+integration suite still runs when a marshalling test fails. It does not rebuild
+the engine or download assets. Test configuration, fixtures, API baselines, and
+Python requirements remain in DiligentFX.
+
+```yml
+- name: Set up Java binding tests
+  uses: DiligentGraphics/github-action/setup-java-binding-tests@v36
+  with:
+    configuration: ${{matrix.build_type}}
+    cc: ${{matrix.cc}}
+    cxx: ${{matrix.cxx}}
+
+- name: Configure CMake
+  uses: DiligentGraphics/github-action/configure-cmake@v35
+  with:
+    generator: Ninja
+    build-type: ${{matrix.build_type}}
+    cmake-args: ${{matrix.cmake_args}} ${{env.RADIENT_JAVA_CMAKE_ARGS}}
+    cc: ${{matrix.cc}}
+    cxx: ${{matrix.cxx}}
+
+- name: Build
+  uses: DiligentGraphics/github-action/build@v35
+
+- name: Test Java bindings
+  uses: DiligentGraphics/github-action/run-java-binding-tests@v36
+```
+
+Both FX and engine checkouts use the same paths. Setup defaults to `source-dir: DiligentFX`, `build-dir: runner.temp/binding-java`, `configuration: Debug`, Clang 22,
+and `/usr/lib/llvm-22/lib/libclang-22.so.1`; `java-home` can override JDK selection.
+The test action defaults to the generic build directory exported by setup and
+`DILIGENT_BUILD_DIR/DiligentFX` for Radient. Override these with `build-dir` and
+`radient-build-dir`; `configuration` defaults to `DILIGENT_BUILD_TYPE`. Relative
+paths are resolved from the workflow workspace. FX and main CI select the
+GCC and Clang Debug/Release jobs, excluding the sanitizer jobs.

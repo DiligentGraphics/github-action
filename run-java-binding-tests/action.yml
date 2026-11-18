@@ -1,0 +1,34 @@
+name: "DiligentGraphics: Run Java Binding Tests"
+description: "Run already-built generic JNI marshalling and real Radient Java integration tests"
+
+inputs:
+  build-dir:
+    description: Generic fixture build directory (defaults to DILIGENT_JAVA_TEST_BUILD_DIR)
+    required: false
+  radient-build-dir:
+    description: DiligentFX build directory (defaults to DILIGENT_BUILD_DIR/DiligentFX)
+    required: false
+  configuration:
+    description: Build configuration (defaults to DILIGENT_BUILD_TYPE)
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Test Java marshalling
+      working-directory: ${{github.workspace}}
+      shell: bash
+      env:
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_CONFIGURATION: ${{inputs.configuration}}
+      run: bash "${{github.action_path}}/run_java_binding_tests.sh" generic
+
+    # A failed marshalling test should not hide integration-test results.
+    - name: Test Radient Java bindings
+      if: ${{ !cancelled() }}
+      working-directory: ${{github.workspace}}
+      shell: bash
+      env:
+        INPUT_RADIENT_BUILD_DIR: ${{inputs.radient-build-dir}}
+        INPUT_CONFIGURATION: ${{inputs.configuration}}
+      run: bash "${{github.action_path}}/run_java_binding_tests.sh" radient
