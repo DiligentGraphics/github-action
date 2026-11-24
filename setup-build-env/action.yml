@@ -48,6 +48,17 @@ runs:
           echo "DILIGENT_MINGW64_BIN_DIR=/c/mingw64/bin" >> $GITHUB_ENV
         fi
 
+    - name: Set up Android SDK environment
+      if: ${{ inputs.platform == 'Android' }}
+      shell: bash
+      run: |
+        if [[ -z "${ANDROID_HOME:-}" || ! -d "$ANDROID_HOME/platforms" ]]; then
+          echo "::error::ANDROID_HOME must point to an installed Android SDK."
+          exit 1
+        fi
+        # Runner variables must be exported to make them available to workflow expressions.
+        echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+
     - name: Download Linux dependencies
       if: ${{ inputs.platform == 'Linux' }}
       shell: bash

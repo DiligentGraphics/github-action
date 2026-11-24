@@ -27,6 +27,11 @@ Sets up the build environment and downloads the required prerequisites:
 - Emscripten SDK
 - Required linux libraries
 
+For Android, the action validates the runner's `ANDROID_HOME` and exports that
+same value through `GITHUB_ENV`. No alternate SDK path is selected. Subsequent steps can use
+both `$ANDROID_HOME` in scripts and `${{env.ANDROID_HOME}}` in workflow inputs.
+An absent or invalid SDK path fails setup before CMake configuration.
+
 Example:
 
 ```yml
@@ -406,31 +411,32 @@ ANGLE uses D3D11 WARP and WebGPU uses SwiftShader, so no hardware GPU is require
 The Linux Samples and Radient JavaScript actions use `common/chrome_swiftshader.sh`.
 Their module-specific harnesses manage browser sessions and report failures. Build and asset-checkout steps remain in the calling workflow.
 
-## setup-java-binding-tests and run-java-binding-tests
+## setup-java-bindings, build-java-binding-tests, and run-java-binding-tests
 
-Build and run generic Java/JNI marshalling tests and real Radient Java integration
-on Linux. The setup action reuses the runner's LLVM 22, Python 3, Ninja, and JDK
-(preferably `JAVA_HOME_21_X64`), installs FX's pinned Python requirements in a venv,
-and builds the generic fixtures. It exports `JAVA_HOME`,
-`DILIGENT_JAVA_TEST_BUILD_DIR`, and `RADIENT_JAVA_CMAKE_ARGS` for later steps.
+Setup, build, and test are separate actions:
 
-Pass `RADIENT_JAVA_CMAKE_ARGS` to the main CMake configuration. That build produces
-Radient, its JNI library, and the integration-test classes together. The test
-action only runs CTest: both suites print every case to the CI console, and the
-integration suite still runs when a marshalling test fails. It does not rebuild
-the engine or download assets. Test configuration, fixtures, API baselines, and
-Python requirements remain in DiligentFX.
+- `setup-java-bindings` prepares the Linux host JDK and Python environment for
+  binding generation. It selects libclang and installs FX's pinned Python
+  requirements. It exports `JAVA_HOME`, `RADIENT_BINDINGS_PYTHON_EXECUTABLE`,
+  `RADIENT_BINDINGS_LIBCLANG`, and `RADIENT_JAVA_CMAKE_ARGS`, and adds the JDK to
+  PATH. Linux and Android workflows use this same action; it builds no binaries.
+- `build-java-binding-tests` uses that environment to configure and build the
+  generic JNI marshalling fixtures. It exports `DILIGENT_JAVA_TEST_BUILD_DIR`.
+  Android workflows do not need this host test build.
+- `run-java-binding-tests` runs CTest for the generic fixtures and real Radient
+  integration tests. It prints every test case and still runs integration tests
+  if marshalling tests fail. It does not configure or build anything.
+
+Pass `RADIENT_JAVA_CMAKE_ARGS` to the main CMake configuration to build Radient,
+its JNI library, and integration-test classes together. Test configuration,
+fixtures, API baselines, and Python requirements remain in DiligentFX.
 
 ```yml
-- name: Set up Java binding tests
-  uses: DiligentGraphics/github-action/setup-java-binding-tests@v36
-  with:
-    configuration: ${{matrix.build_type}}
-    cc: ${{matrix.cc}}
-    cxx: ${{matrix.cxx}}
+- name: Set up Java bindings
+  uses: DiligentGraphics/github-action/setup-java-bindings@v37
 
 - name: Configure CMake
-  uses: DiligentGraphics/github-action/configure-cmake@v35
+  uses: DiligentGraphics/github-action/configure-cmake@v37
   with:
     generator: Ninja
     build-type: ${{matrix.build_type}}
@@ -439,16 +445,53 @@ Python requirements remain in DiligentFX.
     cxx: ${{matrix.cxx}}
 
 - name: Build
-  uses: DiligentGraphics/github-action/build@v35
+  uses: DiligentGraphics/github-action/build@v37
+
+- name: Build Java marshalling tests
+  uses: DiligentGraphics/github-action/build-java-binding-tests@v37
+  with:
+    configuration: ${{matrix.build_type}}
+    cc: ${{matrix.cc}}
+    cxx: ${{matrix.cxx}}
 
 - name: Test Java bindings
-  uses: DiligentGraphics/github-action/run-java-binding-tests@v36
+  uses: DiligentGraphics/github-action/run-java-binding-tests@v37
 ```
 
-Both FX and engine checkouts use the same paths. Setup defaults to `source-dir: DiligentFX`, `build-dir: runner.temp/binding-java`, `configuration: Debug`, Clang 22,
-and `/usr/lib/llvm-22/lib/libclang-22.so.1`; `java-home` can override JDK selection.
-The test action defaults to the generic build directory exported by setup and
-`DILIGENT_BUILD_DIR/DiligentFX` for Radient. Override these with `build-dir` and
-`radient-build-dir`; `configuration` defaults to `DILIGENT_BUILD_TYPE`. Relative
-paths are resolved from the workflow workspace. FX and main CI select the
-GCC and Clang Debug/Release jobs, excluding the sanitizer jobs.
+Both FX and engine checkouts use `source-dir: DiligentFX`. Setup defaults to
+`/usr/lib/llvm-22/lib/libclang-22.so.1` and prefers `JAVA_HOME_21_X64` over
+`JAVA_HOME`; `libclang` and `java-home` override these selections. The fixture
+build defaults to `build-dir: runner.temp/binding-java`, `configuration: Debug`,
+and Clang 22 (`cc`/`cxx` can override the compiler).
+
+The test action defaults to the fixture build directory exported by the build
+step and `DILIGENT_BUILD_DIR/DiligentFX` for Radient. Override these with
+`build-dir` and `radient-build-dir`; `configuration` defaults to
+`DILIGENT_BUILD_TYPE`. Relative paths are resolved from the workflow workspace.
+FX and main CI select GCC and Clang Debug/Release jobs, excluding sanitizer jobs.
+
+## run-radient-android-tests
+
+Runs the already-built `RadientTest`, `RadientJNI`, and `Radient-JavaClasses` on a
+Linux runner with KVM and the Android SDK. The action starts an x86-64 Android
+35 emulator, invokes FX's Android runner, then shuts down the emulator. The
+runner exercises CPU and network tests plus Java factory/engine integration;
+no GPU tests run. All tests are selected by default. Output streams to the job
+log, and `tests.log`, `logcat.log`, and Google Test XML are uploaded even on failure.
+
+```yml
+- name: Test Radient on Android
+  uses: DiligentGraphics/github-action/run-radient-android-tests@v37
+  with:
+    artifact-name: RadientAndroid-x86_64-Debug
+```
+
+`source-dir` defaults to `DiligentFX`; `build-dir` defaults to `DILIGENT_BUILD_DIR`
+(the root of the one-ABI CMake build, not its FX subdirectory). Optional inputs
+are `filter`, `timeout` (600 seconds), `api-level` (35; requires 33 or newer),
+`compile-sdk` (35), `build-tools-version` (35.0.0), `output-dir`, and `artifact-name`.
+The action installs the exact compile SDK and build-tools packages and passes
+these versions to the runner; newer preinstalled versions are not selected.
+The emulator API level is configured independently. Build configuration, test
+assets, deployment, and assertions remain in FX. Build before starting the emulator to avoid
+consuming memory needed by the compiler.

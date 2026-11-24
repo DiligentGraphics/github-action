@@ -1,5 +1,5 @@
-name: "DiligentGraphics: Set Up Java Binding Tests"
-description: "Prepare the Linux Java binding toolchain and build generic JNI marshalling tests"
+name: "DiligentGraphics: Build Java Binding Tests"
+description: "Build generic JNI marshalling tests using the toolchain from setup-java-bindings"
 
 inputs:
   source-dir:
@@ -17,25 +17,17 @@ inputs:
   cxx:
     description: C++ compiler for the generic fixtures
     default: clang++-22
-  libclang:
-    description: LLVM 22 shared library used by the binding parser
-    default: /usr/lib/llvm-22/lib/libclang-22.so.1
-  java-home:
-    description: Installed JDK directory (defaults to JAVA_HOME_21_X64, then JAVA_HOME)
-    required: false
 
 runs:
   using: composite
   steps:
-    - name: Prepare and build Java binding tests
+    - name: Build Java binding tests
       working-directory: ${{github.workspace}}
       shell: bash
       env:
         INPUT_SOURCE_DIR: ${{inputs.source-dir}}
         INPUT_BUILD_DIR: ${{inputs.build-dir}}
         INPUT_CONFIGURATION: ${{inputs.configuration}}
-        INPUT_LIBCLANG: ${{inputs.libclang}}
-        INPUT_JAVA_HOME: ${{inputs.java-home}}
         CC: ${{inputs.cc}}
         CXX: ${{inputs.cxx}}
-      run: bash "${{github.action_path}}/setup_java_binding_tests.sh"
+      run: bash "${{github.action_path}}/build_java_binding_tests.sh"

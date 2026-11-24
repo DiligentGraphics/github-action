@@ -3,7 +3,7 @@ set -euo pipefail
 
 case "${1:?Select generic or radient}" in
     generic)
-        TEST_DIR="${INPUT_BUILD_DIR:-${DILIGENT_JAVA_TEST_BUILD_DIR:?Run setup-java-binding-tests or set build-dir}}"
+        TEST_DIR="${INPUT_BUILD_DIR:-${DILIGENT_JAVA_TEST_BUILD_DIR:?Run build-java-binding-tests or set build-dir}}"
         ;;
     radient)
         BUILD_DIR="${INPUT_RADIENT_BUILD_DIR:-${DILIGENT_BUILD_DIR:?Set radient-build-dir or DILIGENT_BUILD_DIR}/DiligentFX}"

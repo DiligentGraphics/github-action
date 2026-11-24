@@ -1,0 +1,77 @@
+name: "DiligentGraphics: Run Radient Android Tests"
+description: "Run built Radient CPU, network, and Java smoke tests in an Android emulator"
+
+inputs:
+  source-dir:
+    description: DiligentFX source directory
+    default: DiligentFX
+  build-dir:
+    description: Root of the configured x86-64 Android build (defaults to DILIGENT_BUILD_DIR)
+    required: false
+  api-level:
+    description: Emulator API level (33 or newer for Java Cleaner support)
+    default: '35'
+  compile-sdk:
+    description: Exact Android SDK platform used to compile the launcher (independent of the emulator API level)
+    default: '35'
+  build-tools-version:
+    description: Exact Android build-tools version used for D8
+    default: '35.0.0'
+  filter:
+    description: Google Test filter
+    default: '*'
+  timeout:
+    description: Device test timeout in seconds
+    default: '600'
+  output-dir:
+    description: Directory for console output, Android logcat, and Google Test XML
+    default: RadientAndroidTestResults
+  artifact-name:
+    description: Uploaded results artifact name
+    default: RadientAndroidTests
+
+runs:
+  using: composite
+  steps:
+    - name: Install pinned Android SDK packages
+      shell: bash
+      env:
+        INPUT_COMPILE_SDK: ${{inputs.compile-sdk}}
+        INPUT_BUILD_TOOLS_VERSION: ${{inputs.build-tools-version}}
+      run: |
+        "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+          "platforms;android-$INPUT_COMPILE_SDK" "build-tools;$INPUT_BUILD_TOOLS_VERSION"
+
+    - name: Enable emulator acceleration
+      shell: bash
+      run: |
+        # Hosted Linux runners provide KVM, but access must be granted to the job.
+        sudo chown "$(id -u):$(id -g)" /dev/kvm
+
+    - name: Run Radient tests in Android
+      uses: reactivecircus/android-emulator-runner@v2
+      env:
+        INPUT_SOURCE_DIR: ${{inputs.source-dir}}
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_COMPILE_SDK: ${{inputs.compile-sdk}}
+        INPUT_BUILD_TOOLS_VERSION: ${{inputs.build-tools-version}}
+        INPUT_FILTER: ${{inputs.filter}}
+        INPUT_TIMEOUT: ${{inputs.timeout}}
+        INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
+      with:
+        api-level: ${{inputs.api-level}}
+        target: google_apis
+        arch: x86_64
+        cores: 4
+        ram-size: 2048M
+        disable-linux-hw-accel: false
+        emulator-options: -no-window -gpu swiftshader -no-snapshot -noaudio -no-boot-anim
+        script: bash "${{github.action_path}}/run_radient_android_tests.sh"
+
+    - name: Upload Radient Android test results
+      if: ${{always()}}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}
+        path: ${{inputs.output-dir}}
+        if-no-files-found: warn

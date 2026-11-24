@@ -1,0 +1,27 @@
+name: "DiligentGraphics: Set Up Java Bindings"
+description: "Prepare the host toolchain for Java binding generation without building host tests"
+
+inputs:
+  source-dir:
+    description: DiligentFX source directory
+    default: DiligentFX
+  libclang:
+    description: LLVM 22 shared library used by the binding parser
+    default: /usr/lib/llvm-22/lib/libclang-22.so.1
+  java-home:
+    description: Installed JDK directory (defaults to JAVA_HOME_21_X64, then JAVA_HOME)
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Prepare Java binding toolchain
+      shell: bash
+      env:
+        INPUT_SOURCE_DIR: ${{inputs.source-dir}}
+        INPUT_LIBCLANG: ${{inputs.libclang}}
+        INPUT_JAVA_HOME: ${{inputs.java-home}}
+      run: |
+        # Hosted JDK paths are shell variables, not workflow env-context entries.
+        export INPUT_JAVA_HOME="${INPUT_JAVA_HOME:-${JAVA_HOME_21_X64:-${JAVA_HOME:-}}}"
+        bash "${{github.action_path}}/../common/setup_java_bindings.sh"
