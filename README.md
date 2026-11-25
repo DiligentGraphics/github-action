@@ -495,3 +495,26 @@ these versions to the runner; newer preinstalled versions are not selected.
 The emulator API level is configured independently. Build configuration, test
 assets, deployment, and assertions remain in FX. Build before starting the emulator to avoid
 consuming memory needed by the compiler.
+
+## package-radient-npm
+
+Assembles `@diligentgraphics/radient` from an existing Release/WebGPU build,
+then installs the packed tarball into an independent TypeScript/Vite consumer
+and runs Node and Linux Chrome smoke tests for blob access, WebGPU rendering,
+local files, and network loading.
+Package contents and tests live in FX; the action supplies Node 24 and the shared
+SwiftShader launcher. It does not rebuild Radient or publish to npm.
+
+```yml
+- name: Assemble and test Radient npm package
+  uses: DiligentGraphics/github-action/package-radient-npm@v38
+```
+
+Defaults: `source-dir: DiligentFX`, `build-dir: DILIGENT_BUILD_DIR`,
+`output-dir: RadientNpmPackage`. The output directory must not already exist.
+`version` overrides the source package's development version; `browser` overrides
+Chrome discovery. The `tarball` output is set only after validation succeeds.
+The artifact contains that exact tarball, its SHA-256, and build metadata; logs
+are uploaded separately even on failure. A future main-repository publishing job
+must depend on all required test jobs and publish the tested artifact unchanged.
+FX validates packages but never publishes them.

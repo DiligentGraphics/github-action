@@ -1,0 +1,57 @@
+name: "DiligentGraphics: Assemble and Test Radient npm Package"
+description: "Pack an existing Release SDK and validate the installed tarball in TypeScript, Node, and Linux Chrome"
+inputs:
+  source-dir:
+    description: DiligentFX source directory
+    default: DiligentFX
+  build-dir:
+    description: Top-level CMake build directory (defaults to DILIGENT_BUILD_DIR)
+    required: false
+  version:
+    description: Package version override (defaults to the SDK development version)
+    required: false
+  output-dir:
+    description: New directory for package, tarball, and test logs
+    default: RadientNpmPackage
+  artifact-name:
+    description: Uploaded tested tarball and logs
+    default: RadientNpmPackage
+  browser:
+    description: Chrome executable (discovered by the shared SwiftShader wrapper)
+    required: false
+outputs:
+  tarball:
+    description: Absolute path of the tested npm tarball
+    value: ${{steps.package.outputs.tarball}}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+    - name: Assemble and validate the installed SDK
+      id: package
+      shell: bash
+      env:
+        INPUT_SOURCE_DIR: ${{inputs.source-dir}}
+        INPUT_BUILD_DIR: ${{inputs.build-dir}}
+        INPUT_VERSION: ${{inputs.version}}
+        INPUT_OUTPUT_DIR: ${{inputs.output-dir}}
+        DILIGENT_BROWSER_EXECUTABLE: ${{inputs.browser}}
+      run: bash "${{github.action_path}}/package_radient_npm.sh"
+    - name: Upload tested npm package
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}
+        path: |
+          ${{inputs.output-dir}}/*.tgz
+          ${{inputs.output-dir}}/package/build-info.json
+          ${{inputs.output-dir}}/package.sha256
+        if-no-files-found: error
+    - name: Upload package validation logs
+      if: ${{always()}}
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{inputs.artifact-name}}-logs
+        path: ${{inputs.output-dir}}/*.log
+        if-no-files-found: warn
